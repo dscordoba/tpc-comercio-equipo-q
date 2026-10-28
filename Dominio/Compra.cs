@@ -10,15 +10,11 @@ namespace Dominio
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
-
-       
-
-         public Proveedor ProveedorAsociado { get; set; }
-         public List<DetalleCompra> LineasCompra { get; set; }
-
-         public Compra()
-         {
-             LineasCompra = new List<DetalleCompra>();
-         }
+        public Proveedor ProveedorAsociado { get; set; }
+        public List<DetalleCompra> LineasCompra { get; set; }
+        public Compra()
+        {
+            LineasCompra = new List<DetalleCompra>();
+        }
     }
 }
