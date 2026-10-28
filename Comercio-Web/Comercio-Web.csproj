@@ -98,6 +98,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mod_Admin\Perfiles.aspx" />
+    <Content Include="Mod_Admin\Usuarios.aspx" />
+    <Content Include="Mod_Compras\NuevaCompra.aspx" />
     <Content Include="Mod_Compras\Proveedores.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -119,6 +121,7 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Mod_Inventario\Marcas.aspx" />
     <Content Include="Mod_Inventario\Productos.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -192,6 +195,20 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Mod_Admin\Usuarios.aspx.cs">
+      <DependentUpon>Usuarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mod_Admin\Usuarios.aspx.designer.cs">
+      <DependentUpon>Usuarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mod_Compras\NuevaCompra.aspx.cs">
+      <DependentUpon>NuevaCompra.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mod_Compras\NuevaCompra.aspx.designer.cs">
+      <DependentUpon>NuevaCompra.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Mod_Compras\Proveedores.aspx.cs">
       <DependentUpon>Proveedores.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -208,6 +225,13 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Mod_Inventario\Marcas.aspx.cs">
+      <DependentUpon>Marcas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mod_Inventario\Marcas.aspx.designer.cs">
+      <DependentUpon>Marcas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Mod_Inventario\Productos.aspx.cs">
       <DependentUpon>Productos.aspx</DependentUpon>
