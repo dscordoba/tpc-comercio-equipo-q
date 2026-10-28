@@ -59,9 +59,9 @@
                                 </a>
                                 <div class="collapse ms-3 ps-2 border-start border-white-50" id="menuAdmin">
                                     <ul class="nav flex-column small mt-1 gap-1">
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Admin/Usuarios">Gestión de usuarios</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Admin/Perfiles">Gestión de perfiles</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Admin/Tablas">Configuraciones</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Usuarios">Gestión de usuarios</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Perfiles">Gestión de perfiles</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Tablas">Configuraciones</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -78,9 +78,9 @@
                                 </a>
                                 <div class="collapse ms-3 ps-2 border-start border-white-50" id="menuInventario">
                                     <ul class="nav flex-column small mt-1 gap-1">
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Inventario/Productos">Gestión de Productos</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Inventario/Marcas">Gestión de Marcas</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Inventario/Categorias">Gestión de Categorías</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Inventario/Productos">Gestión de Productos</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Inventario/Marcas">Gestión de Marcas</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Inventario/Categorias">Gestión de Categorías</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -97,9 +97,9 @@
                                 </a>
                                 <div class="collapse ms-3 ps-2 border-start border-white-50" id="menuCompras">
                                     <ul class="nav flex-column small mt-1 gap-1">
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Compras/NuevaCompra">Nueva Compra</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Compras/Proveedores">Gestión de Proveedores</a></li>  
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Compras/Informes">Informes</a></li>                                                            
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Compras/NuevaCompra">Nueva Compra</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Compras/Proveedores">Gestión de Proveedores</a></li>  
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Compras/Informes">Informes</a></li>                                                            
                                     </ul>
                                 </div>
                             </li>
@@ -117,9 +117,9 @@
                                 </a>
                                 <div class="collapse ms-3 ps-2 border-start border-white-50" id="menuVentas">
                                     <ul class="nav flex-column small mt-1 gap-1">
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Ventas/NuevaVenta">Nueva Venta (Facturación)</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Ventas/Clientes">Gestión de Clientes</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Ventas/Informes">Informes</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Ventas/NuevaVenta">Nueva Venta (Facturación)</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Ventas/Clientes">Gestión de Clientes</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Ventas/Informes">Informes</a></li>
                                     </ul>
                                 </div>
                             </li>
