@@ -19,14 +19,14 @@ namespace Dominio
         public Marca MarcaAsociada { get; set; }
         public bool Activo { get; set; }
 
-        // Descomentar cuando estén Categoria y Proveedor (Marce)
+        
 
-        // public Categoria CategoriaAsociada { get; set; }
-        // public List<Proveedor> ProveedoresAsociados { get; set; }
+         public Categoria CategoriaAsociada { get; set; }
+         public List<Proveedor> ProveedoresAsociados { get; set; }
 
-        // public Producto()
-        // {
-        //     ProveedoresAsociados = new List<Proveedor>();
-        // }
+         public Producto()
+         {
+             ProveedoresAsociados = new List<Proveedor>();
+         }
     }
 }

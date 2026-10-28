@@ -11,14 +11,14 @@ namespace Dominio
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
 
-        // Descomentar cuando estén Proveedor (Marce) y DetalleCompra (Sol)
+       
 
-        // public Proveedor ProveedorAsociado { get; set; }
-        // public List<DetalleCompra> LineasCompra { get; set; }
+         public Proveedor ProveedorAsociado { get; set; }
+         public List<DetalleCompra> LineasCompra { get; set; }
 
-        // public Compra()
-        // {
-        //     LineasCompra = new List<DetalleCompra>();
-        // }
+         public Compra()
+         {
+             LineasCompra = new List<DetalleCompra>();
+         }
     }
 }
