@@ -20,7 +20,7 @@ namespace Datos
 
         public ConexionDatos()
         {
-            conexion = new SqlConnection("server=localhost; database=COMERCIO_DB; user id=sa; password=Sebas41151179#");
+            conexion = new SqlConnection("server=.\\SQLEXPRESS; database=COMERCIO_DB; integrated security=true;");
             comando = new SqlCommand();
         }
 
