@@ -28,7 +28,7 @@
                         </div>
                         <div class="sidebar-brand-text fw-bold tracking-wide text-uppercase text-white">COMERCIO</div>
                     </div>  
-                    <hr class="text-white-50 my-2" />
+                    <hr class="text-white-50 my-1" />
                     <!-- Contenedor de Menú -->
                     <div class="flex-grow-1">
                         <ul class="nav flex-column gap-1">
@@ -59,9 +59,7 @@
                                 </a>
                                 <div class="collapse ms-3 ps-2 border-start border-white-50" id="menuAdmin">
                                     <ul class="nav flex-column small mt-1 gap-1">
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Usuarios">Gestión de usuarios</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Perfiles">Gestión de perfiles</a></li>
-                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Tablas">Configuraciones</a></li>
+                                        <li><a class="nav-link text-white-50 p-1 rounded" runat="server" href="~/Mod_Admin/Usuarios">Gestión de Usuarios</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -128,7 +126,7 @@
                 </div>
                 <div class="d-flex flex-column flex-grow-1 bg-light">
                     <!-- NAVBAR SUPERIOR (Topbar) -->
-                    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm px-4 mb-4" style="height: 70px;">
+                    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm px-4" style="height: 70px;">
                         <ul class="navbar-nav ms-auto align-items-center gap-3">
                             <div class="topbar-divider d-none d-sm-block border-start h-100 mx-2" style="width: 1px; height: 2.5rem !important;"></div>
                             <li class="nav-item dropdown d-flex align-items-center">
@@ -143,12 +141,12 @@
                         </ul>
                     </nav>
                     <!-- CONTENIDO DE LA PÁGINA -->
-                    <div class="container-fluid flex-grow-1 px-4">
+                    <div class="container-fluid flex-grow-1 px-1" style="background-color: #dfe4eb">
                         <asp:ContentPlaceHolder ID="MainContent" runat="server">
                         </asp:ContentPlaceHolder>
                     </div>
                     <!-- FOOTER -->
-                    <footer class="sticky-footer bg-white py-3 border-top mt-5">
+                    <footer class="sticky-footer bg-white py-3 border-top">
                         <div class="container my-auto">
                             <div class="copyright text-center my-auto">
                                 <span class="text-muted small">&copy; <%: DateTime.Now.Year %> <strong class="text-dark">Nuestra APP WEB</strong> Todos los derechos reservados.</span>
