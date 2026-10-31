@@ -17,16 +17,12 @@ namespace Dominio
         public decimal PorcentajeGanancia { get; set; }
         public decimal PrecioCompraActual { get; set; }
         public Marca MarcaAsociada { get; set; }
+        public Categoria CategoriaAsociada { get; set; }
+        public List<Proveedor> ProveedoresAsociados { get; set; }
+        public Producto()
+        {
+            ProveedoresAsociados = new List<Proveedor>();
+        }
         public bool Activo { get; set; }
-
-        
-
-         public Categoria CategoriaAsociada { get; set; }
-         public List<Proveedor> ProveedoresAsociados { get; set; }
-
-         public Producto()
-         {
-             ProveedoresAsociados = new List<Proveedor>();
-         }
     }
 }
