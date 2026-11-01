@@ -3,7 +3,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- CONTENEDOR GENERAL -->
-    <div class="container-fluid p-3 bg-transparent">
+    <div class="container-fluid p-2 p-sm-3 bg-transparent">
 
         <!-- BREADCRUMB (Ruta superior) -->
         <div class="row mb-3">
@@ -17,18 +17,18 @@
             </div>
         </div>
 
-        <!-- PRINCIPAL: Dividida en 8 columnas (Listado) y 4 columnas (Formulario) -->
+        <!-- PRINCIPAL -->
         <div class="row">
 
             <!-- COLUMNA IZQUIERDA -->
-            <div class="col-lg-8 mb-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
+            <div class="col-12 col-lg-7 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-3 p-md-4">
 
-                        <h3 class="text-center mb-4">Listado de Clientes</h3>
+                        <h3 class="text-center mb-3 mb-md-4">Listado de Clientes</h3>
 
                         <div class="table-responsive">
-                            <asp:GridView ID="dgvClientes" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover border">
+                            <asp:GridView ID="dgvClientes" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover border align-middle mb-0">
                                 <HeaderStyle CssClass="table-info" />
                                 <Columns>
                                     <asp:BoundField DataField="Id" HeaderText="Id" />
@@ -43,13 +43,12 @@
             </div>
 
             <!-- COLUMNA DERECHA: Formulario de Carga -->
-            <div class="col-lg-4 mb-3">
+            <div class="col-12 col-lg-5 mb-3">
                 <div class="card shadow-sm border-0">
-                    <div class="card-body">
+                    <div class="card-body p-3 p-md-4">
 
-                        <h3 class="text-center mb-4">Cliente</h3>
+                        <h3 class="text-center mb-3 mb-md-4">Cliente</h3>
 
-                        <!-- ID oculto para el servidor -->
                         <asp:HiddenField ID="hfClienteId" runat="server" />
 
                         <div class="input-group mb-3">
@@ -100,9 +99,9 @@
                         </div>
 
                         <!-- Botones de Acción -->
-                        <div class="text-center mt-4">
-                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3 me-1" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3 me-1" />
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
+                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" />
+                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" />
                             <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" />
                         </div>
 
