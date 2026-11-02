@@ -119,14 +119,14 @@
                             <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">  
                     
                                 <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <input class="form-check-input" type="radio" name="rbGrupoActivo" id="rbActivoSI" runat="server" checked />
+                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoSI.ClientID %>">
                                         <span class="badge bg-success px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">SI</span>
                                     </label>
                                 </div>
 
                                 <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <input class="form-check-input" type="radio" name="rbGrupoActivo" id="rbActivoNO" runat="server" />
+                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoNO.ClientID %>">
                                         <span class="badge bg-danger px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">NO</span>
                                     </label>
@@ -137,9 +137,9 @@
 
                         <!-- Botones de Acción -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" />
-                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" />
+                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClick="btnGrabar_Click" />
+                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" OnClick="btnEliminar_Click"/>
+                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click"/>
                         </div>
 
                     </div>

@@ -13,5 +13,20 @@ namespace Presentacion.Inventario
         {
 
         }
+
+        protected void btnGrabar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
