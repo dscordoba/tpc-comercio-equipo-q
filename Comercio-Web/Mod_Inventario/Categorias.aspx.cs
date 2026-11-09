@@ -13,5 +13,19 @@ namespace Presentacion.Mod_Inventario
         {
 
         }
+
+        protected void btnGrabar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+        
+        }
+        protected void btnCancelar_Click(Object sender, EventArgs e)
+        {
+
+        }
     }
 }
