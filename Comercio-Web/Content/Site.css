@@ -10,25 +10,12 @@
 input,
 select,
 textarea {
-    max-width: 100%;
+    max-width: 280px;
 }
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .body-content {
         padding: 0;
-    }
-}
-
-/* Modifica globalmente tanto la etiqueta como el campo de texto */
-.input-group-text,
-.input-group .form-control {
-    font-size: 0.9rem;
-}
-
-/* h3 font-size */
-@media (min-width: 1200px) {
-    .h3, h3 {
-        font-size: 1.5rem;
     }
 }
