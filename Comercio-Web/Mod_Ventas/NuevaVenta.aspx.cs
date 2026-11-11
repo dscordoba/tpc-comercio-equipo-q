@@ -13,5 +13,21 @@ namespace Presentacion.Mod_Ventas
         {
 
         }
+        protected void ddlProducto_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnAgregarLinea_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnConfirmar_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnCancelar_Click(Object sender, EventArgs e)
+        {
+        
+        }
     }
 }
