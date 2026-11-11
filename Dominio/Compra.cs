@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    internal class Compra
+    public class Compra
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
+        public string NumeroFactura { get; set; }
         public Proveedor ProveedorAsociado { get; set; }
         public List<DetalleCompra> LineasCompra { get; set; }
         public Compra()
