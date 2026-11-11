@@ -44,6 +44,28 @@ namespace Datos
             comando.ExecuteNonQuery();
         }
 
+        public int ejecutarAccionScalar()
+        {
+            try
+            {
+                comando.Connection = conexion;
+                conexion.Open();
+
+                // Capturamos el ID Nuevo
+                object resultado = comando.ExecuteScalar();
+
+                if (resultado != null)
+                {
+                    return Convert.ToInt32(resultado);
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void setearParametro(string nombre, object valor)
         {
             comando.Parameters.AddWithValue(nombre, valor);

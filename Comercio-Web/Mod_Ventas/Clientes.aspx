@@ -28,16 +28,29 @@
                         <h3 class="text-center mb-3 mb-md-4">Listado de Clientes</h3>
 
                         <div class="table-responsive">
-                            <asp:GridView ID="dgvClientes" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover border align-middle mb-0">
-                                <HeaderStyle CssClass="table-info" />
-                                <Columns>
-                                    <asp:BoundField DataField="Id" HeaderText="Id" />
-                                    <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                                    <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-                                    <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
-                                </Columns>
-                            </asp:GridView>
-                        </div>
+    <asp:GridView ID="dgvClientes" runat="server" 
+        AutoGenerateColumns="False" 
+        DataKeyNames="Id" 
+        OnSelectedIndexChanged="dgvClientes_SelectedIndexChanged"
+        CssClass="table table-striped table-hover border align-middle mb-0">
+        <HeaderStyle CssClass="table-info" />
+        <Columns>
+            <asp:TemplateField HeaderText="Id">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lnkId" runat="server" 
+                        Text='<%# Eval("Id") %>' 
+                        CommandName="Select" 
+                        CssClass="fw-bold text-decoration-none" />
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+            <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+            <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
+        </Columns>
+    </asp:GridView>
+</div>
+
                     </div>
                 </div>
             </div>
