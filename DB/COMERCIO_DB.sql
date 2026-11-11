@@ -37,3 +37,23 @@ GO
 INSERT INTO Clientes (Nombre, Apellido, Dni, Email, Activo)
 VALUES ('Juan', 'Perez', '35123456', 'juan.perez@email.com', 1);
 GO
+
+CREATE TABLE dbo.USUARIOS (
+    Id                  INT IDENTITY(1,1)   NOT NULL,
+    Nombre              VARCHAR(100)        NOT NULL,
+    Apellido            VARCHAR(100)        NOT NULL,
+    Dni                 VARCHAR(20)         NOT NULL UNIQUE,
+    Email               VARCHAR(150)        NOT NULL UNIQUE,
+    Activo              BIT                 NOT NULL        DEFAULT 1,
+    NombreUsuario       VARCHAR(50)         NOT NULL UNIQUE,
+    Contraseña          VARCHAR(100)        NOT NULL,
+    Perfil              VARCHAR(20)         NOT NULL,
+
+    CONSTRAINT PK_USUARIOS                  PRIMARY KEY (Id)
+);
+GO
+
+INSERT INTO USUARIOS (Nombre, Apellido, Dni, Email, Activo, NombreUsuario, Contraseña, Perfil)
+VALUES ('Admin', 'Sistema', '10000001', 'admin@comercio.com', 1, 'admin', '1234', 'Administrador'),
+       ('Vera', 'Vendedora', '10000002', 'vera@comercio.com', 1, 'vera', '1234', 'Vendedor');
+GO
