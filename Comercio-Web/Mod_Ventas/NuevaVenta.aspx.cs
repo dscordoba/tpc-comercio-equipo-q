@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Negocio;
+using Presentacion.Ventas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +13,7 @@ namespace Presentacion.Mod_Ventas
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+        
         }
         protected void ddlProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -23,11 +25,21 @@ namespace Presentacion.Mod_Ventas
         }
         protected void btnConfirmar_Click(object sender, EventArgs e)
         {
+            try
+            {
+
+            }
+            catch ( Exception ex)
+            {
+
+                throw ex;
+            }
 
         }
         protected void btnCancelar_Click(Object sender, EventArgs e)
         {
         
         }
+
     }
 }
