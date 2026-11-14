@@ -12,7 +12,7 @@ namespace Dominio
         public string NumeroFactura {  get; set; }
         public DateTime Fecha {  get; set; }
         
-        //public Cliente ClienteAsociado (se agrega cuando este creado Cliente)
+        public Cliente ClienteAsociado {  get; set; }
         public List<DetalleVenta> LineasVenta { get; set; } 
         public decimal TotalFinal {  get; set; }
     }
