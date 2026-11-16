@@ -159,5 +159,14 @@
             </div>
         </form>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <script src='<%= ResolveUrl("~/Scripts/validaciones.js") %>'></script>
+        <script type="text/javascript">
+            document.addEventListener("keydown", function (event) {
+                // Bloquea el Enter solo si el usuario está escribiendo dentro de una caja de texto (TextBox)
+                if (event.key === "Enter" && event.target.tagName === "INPUT" && (event.target.type === "text" || event.target.type === "number" || event.target.type === "email")) {
+                    event.preventDefault();
+                }
+            });
+        </script>
     </body>
 </html>

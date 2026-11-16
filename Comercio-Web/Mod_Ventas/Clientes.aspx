@@ -1,5 +1,18 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Clientes.aspx.cs" Inherits="Presentacion.Ventas.Clientes" %>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script>
+        function validar() {
+            const valNombre = validarRequerido(document.getElementById("txtNombre"));
+            const valApellido = validarRequerido(document.getElementById("txtApellido"));
+            const valDni = validarDni(document.getElementById("txtDni"));
+            const valEmail = validarEmail(document.getElementById("txtEmail"));
+
+            return valNombre && valApellido && valDni && valEmail;
+        }
+    </script>
+</asp:Content> 
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- CONTENEDOR GENERAL -->
@@ -28,28 +41,28 @@
                         <h3 class="text-center mb-3 mb-md-4">Listado de Clientes</h3>
 
                         <div class="table-responsive">
-    <asp:GridView ID="dgvClientes" runat="server" 
-        AutoGenerateColumns="False" 
-        DataKeyNames="Id" 
-        OnSelectedIndexChanged="dgvClientes_SelectedIndexChanged"
-        CssClass="table table-striped table-hover border align-middle mb-0">
-        <HeaderStyle CssClass="table-info" />
-        <Columns>
-            <asp:TemplateField HeaderText="Id">
-                <ItemTemplate>
-                    <asp:LinkButton ID="lnkId" runat="server" 
-                        Text='<%# Eval("Id") %>' 
-                        CommandName="Select" 
-                        CssClass="fw-bold text-decoration-none" />
-                </ItemTemplate>
-            </asp:TemplateField>
+                            <asp:GridView ID="dgvClientes" runat="server" 
+                                AutoGenerateColumns="False" 
+                                DataKeyNames="Id" 
+                                OnSelectedIndexChanged="dgvClientes_SelectedIndexChanged"
+                                CssClass="table table-striped table-hover border align-middle mb-0">
+                                <HeaderStyle CssClass="table-info" />
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Id">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lnkId" runat="server" 
+                                                Text='<%# Eval("Id") %>' 
+                                                CommandName="Select" 
+                                                CssClass="fw-bold text-decoration-none" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
 
-            <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-            <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-            <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
-        </Columns>
-    </asp:GridView>
-</div>
+                                    <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                    <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                                    <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
 
                     </div>
                 </div>
@@ -62,8 +75,6 @@
 
                         <h3 class="text-center mb-3 mb-md-4">Cliente</h3>
 
-                        <asp:HiddenField ID="hfClienteId" runat="server" />
-
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 85px;">Id</span>
                             <asp:TextBox ID="txtId" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
@@ -71,38 +82,43 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 85px;">Nombre</span>
-                            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtNombre" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                            <div class="invalid-feedback">El nombre es requerido.</div>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 85px;">Apellido</span>
-                            <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtApellido" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                            <div class="invalid-feedback">El apellido es requerido.</div>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 85px;">DNI</span>
-                            <asp:TextBox ID="txtDni" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtDni" ClientIDMode="Static" runat="server" CssClass="form-control" 
+                                MaxLength="8" oninput="soloNumeros(this);"></asp:TextBox>
+                            <div class="invalid-feedback">Ingrese un DNI válido (7 u 8 números).</div>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 85px;">Email</span>
-                            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtEmail" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                            <div class="invalid-feedback">Ingrese un email válido (ej: usuario@dominio.com).</div>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold justify-content-center" style="width: 85px;">Activo</span>
-    
-                            <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">  
-                                
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" />
+
+                            <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">
+        
+                                <div id="divRbActivoSi" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" Enabled="false" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoSI.ClientID %>">
                                         <span class="badge bg-success px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">SI</span>
                                     </label>
                                 </div>
 
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" />
+                                <div id="divRbActivoNo" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" Enabled="false" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoNO.ClientID %>">
                                         <span class="badge bg-danger px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">NO</span>
                                     </label>
@@ -111,11 +127,13 @@
                             </div>
                         </div>
 
+                        <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
+
                         <!-- Botones de Acción -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClick="btnGrabar_Click" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" OnClick="btnEliminar_Click" />
-                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click" />
+                            <asp:Button ID="Button1" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
+                            <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
+                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" CausesValidation="false" OnClick="btnCancelar_Click" />
                         </div>
 
                     </div>
