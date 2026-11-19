@@ -114,3 +114,112 @@ CREATE TABLE dbo.VENTAS (
     CONSTRAINT FK_VENTAS_CLIENTES       FOREIGN KEY(IdCliente) REFERENCES dbo.CLIENTES(Id)
 );
 GO
+
+-- CREAR TABLA PRODUCTOS
+CREATE TABLE dbo.PRODUCTOS (
+    Id                  INT IDENTITY(1,1)   NOT NULL,
+    CodigoProducto      VARCHAR(50)         NOT NULL UNIQUE,
+    Nombre              VARCHAR(100)        NOT NULL,
+    Descripcion         VARCHAR(250)        NULL,
+    PrecioCompraActual  DECIMAL(18, 2)      NOT NULL        DEFAULT 0,
+    PorcentajeGanancia  DECIMAL(5, 2)       NOT NULL        DEFAULT 0, 
+    StockActual         INT                 NOT NULL        DEFAULT 0,
+    StockMinimo         INT                 NOT NULL        DEFAULT 0,
+    IdMarca             INT                 NOT NULL,
+    IdCategoria         INT                 NOT NULL,
+    Activo              BIT                 NOT NULL        DEFAULT 1,
+
+    CONSTRAINT PK_PRODUCTOS             PRIMARY KEY (Id),
+    CONSTRAINT FK_PRODUCTOS_MARCAS      FOREIGN KEY (IdMarca)       REFERENCES dbo.MARCAS(Id),
+    CONSTRAINT FK_PRODUCTOS_CATEGORIAS  FOREIGN KEY (IdCategoria)   REFERENCES dbo.CATEGORIAS(Id)
+);
+GO
+
+-- INSERTAR PRODUCTOS (StockActual y PrecioCompraActual en 0)
+INSERT INTO dbo.PRODUCTOS (
+    CodigoProducto,
+    Nombre,
+    Descripcion,
+    PrecioCompraActual,
+    PorcentajeGanancia,
+    StockActual,
+    StockMinimo,
+    IdMarca,
+    IdCategoria,
+    Activo
+)
+VALUES
+    ('SAM-TV50', 'Smart TV 50" 4K UHD', 'Televisor LED 50 pulgadas resolución 4K con HDR', 0, 35.00, 0, 5, 1, 1, 1),
+    ('PHI-CAF01', 'Cafetera Express Automática', 'Cafetera con espumador de leche integrado 15 bares', 0, 40.00, 0, 3, 2, 1, 1),
+    ('LOG-G502', 'Mouse Gamer G502 Hero', 'Mouse óptico con cable, sensor 25K DPI, 11 botones', 0, 50.00, 0, 10, 3, 2, 1),
+    ('SON-WH1000', 'Auriculares Sony WH-1000XM5', 'Auriculares inalámbricos con cancelación de ruido', 0, 30.00, 0, 4, 4, 2, 1);
+GO
+
+-- CREAR TABLA PARA ASOCIAR PRODUCTOS_PROVEEDORES
+CREATE TABLE dbo.PRODUCTOS_PROVEEDORES (
+    IdProducto      INT     NOT NULL,
+    IdProveedor     INT     NOT NULL,
+
+    CONSTRAINT PK_PRODUCTOS_PROVEEDORES             PRIMARY KEY (IdProducto, IdProveedor),
+    CONSTRAINT FK_PRODUCTOS_PROVEEDORES_PRODUCTO    FOREIGN KEY (IdProducto)    REFERENCES dbo.PRODUCTOS(Id),
+    CONSTRAINT FK_PRODUCTOS_PROVEEDORES_PROVEEDOR   FOREIGN KEY (IdProveedor)   REFERENCES dbo.PROVEEDORES(Id)
+);
+GO
+
+-- ASOCIAR PRODUCTOS CON PROVEEDORES
+INSERT INTO dbo.PRODUCTOS_PROVEEDORES (IdProducto, IdProveedor)
+VALUES 
+    (1, 1),
+    (1, 2),
+    (2, 1),
+    (3, 2),
+    (3, 3),
+    (4, 1),
+    (4, 2),
+    (4, 3);
+GO
+
+-- STORE PROCEDURE TABLA PRODUCTOS - MARCAS - CATEGORIAS
+CREATE PROCEDURE dbo.listarProductos
+AS
+BEGIN
+    SELECT  
+        P.Id, 
+        P.CodigoProducto, 
+        P.Nombre, 
+        P.Descripcion, 
+        P.StockActual, 
+        P.StockMinimo, 
+        P.PorcentajeGanancia, 
+        P.PrecioCompraActual, 
+        P.Activo,
+        M.Id AS IdMarca, 
+        M.Descripcion AS MarcaDescripcion,
+        C.Id AS IdCategoria, 
+        C.Descripcion AS CategoriaDescripcion
+    FROM dbo.PRODUCTOS P
+    INNER JOIN dbo.MARCAS M 
+        ON P.IdMarca = M.Id
+    INNER JOIN dbo.CATEGORIAS C 
+        ON P.IdCategoria = C.Id;
+END
+GO
+
+-- SP PARA LISTAR PROVEEDORES DE UN PRODUCTO
+CREATE PROCEDURE dbo.listarProveedoresPorProducto
+    @IdProducto INT
+AS
+BEGIN
+    SELECT 
+        PR.Id, 
+        PR.RazonSocial, 
+        PR.Cuit, 
+        PR.Email, 
+        PR.Telefono, 
+        PR.Activo
+    FROM dbo.PROVEEDORES PR
+    INNER JOIN dbo.PRODUCTOS_PROVEEDORES PP 
+        ON PR.Id = PP.IdProveedor
+    WHERE PP.IdProducto = @IdProducto;
+END
+GO
