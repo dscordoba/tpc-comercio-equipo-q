@@ -2,150 +2,159 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <!-- CONTENEDOR GENERAL -->
-    <div class="container-fluid p-2 p-sm-3 bg-transparent">
+    <!-- BREADCRUMB (Ruta superior) -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item text-secondary">INVENTARIO</li>
+                    <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">Gestión de Productos</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
-        <!-- BREADCRUMB (Ruta superior) -->
-        <div class="row mb-3">
-            <div class="col-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item text-secondary">INVENTARIO</li>
-                        <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">Gestión de Productos</li>
-                    </ol>
-                </nav>
+    <!-- PRINCIPAL -->
+    <div class="row">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="col-12 col-lg-7 mb-3">
+            <div class="card shadow-sm border-3 h-100">
+                <div class="card-body p-3 p-md-4">
+
+                    <h3 class="text-center mb-3 mb-md-4">Listado de Productos</h3>
+
+                    <div class="table-responsive">
+                        <asp:GridView ID="dgvProductos" runat="server" AutoGenerateColumns="False" DataKeyNames="Id" OnSelectedIndexChanged="dgvProductos_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0">
+                            <HeaderStyle CssClass="table-info" />
+                            <Columns>
+                                <asp:TemplateField HeaderText="Id">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="lnkId" runat="server" 
+                                            Text='<%# Eval("Id") %>' 
+                                            CommandName="Select" 
+                                            CssClass="fw-bold text-decoration-none" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField DataField="CodigoProducto" HeaderText="Código" />
+                                <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                <asp:BoundField DataField="StockActual" HeaderText="Stock Actual" />
+                                <asp:BoundField DataField="PorcentajeGanancia" HeaderText="Porcentaje Ganancia" />
+                                <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- PRINCIPAL -->
-        <div class="row">
+        <!-- COLUMNA DERECHA: Formulario de Carga -->
+        <div class="col-12 col-lg-5 mb-3">
+            <div class="card shadow-sm border-3">
+                <div class="card-body p-3 p-md-4">
 
-            <!-- COLUMNA IZQUIERDA -->
-            <div class="col-12 col-lg-7 mb-3">
-                <div class="card shadow-sm border-3 h-100">
-                    <div class="card-body p-3 p-md-4">
+                    <h3 class="text-center mb-3 mb-md-4">Producto</h3>
 
-                        <h3 class="text-center mb-3 mb-md-4">Listado de Productos</h3>
-
-                        <div class="table-responsive">
-                            <asp:GridView ID="dgvProductos" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover border align-middle mb-0">
-                                <HeaderStyle CssClass="table-info" />
-                                <Columns>
-                                    <asp:BoundField DataField="Id" HeaderText="Id" />
-                                    <asp:BoundField DataField="CodigoArt" HeaderText="CodigoArt" />
-                                    <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                                    <asp:BoundField DataField="StockActual" HeaderText="StockActual" />
-                                    <asp:BoundField DataField="PorcentajeGanancia" HeaderText="PorcentajeGanancia" />
-                                    <asp:BoundField DataField="Activo" HeaderText="Activo" />
-                                </Columns>
-                            </asp:GridView>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Id</span>
+                        <asp:TextBox ID="txtId" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
                     </div>
-                </div>
-            </div>
 
-            <!-- COLUMNA DERECHA: Formulario de Carga -->
-            <div class="col-12 col-lg-5 mb-3">
-                <div class="card shadow-sm border-3">
-                    <div class="card-body p-3 p-md-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Cod. Art.</span>
+                        <asp:TextBox ID="txtCodigoArt" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="invalid-feedback">El código de artículo es requerido.</div>
+                    </div>
 
-                        <h3 class="text-center mb-3 mb-md-4">Producto</h3>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Nombre</span>
+                        <asp:TextBox ID="txtNombre" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="invalid-feedback">El nombre es requerido.</div>
+                    </div>
 
-                        <asp:HiddenField ID="hfProductoId" runat="server" />
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Descripción</span>
+                        <asp:TextBox ID="txtDescripcion" ClientIDMode="Static" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Id</span>
-                            <asp:TextBox ID="txtId" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Categoría</span>
+                        <asp:DropDownList ID="ddlCategoria" ClientIDMode="Static" runat="server" CssClass="form-select">
+                            <asp:ListItem Text="Seleccione una categoría" Value="" />
+                        </asp:DropDownList>
+                        <div class="invalid-feedback">Debe seleccionar una categoría.</div>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Cod. Art.</span>
-                            <asp:TextBox ID="txtCodigoArt" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Marca</span>
+                        <asp:DropDownList ID="ddlMarca" ClientIDMode="Static" runat="server" CssClass="form-select">
+                            <asp:ListItem Text="Seleccione una marca" Value="" />
+                        </asp:DropDownList>
+                        <div class="invalid-feedback">Debe seleccionar una marca.</div>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Nombre</span>
-                            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Proveedores</span>
+                        <asp:ListBox ID="lbProveedores" ClientIDMode="Static" runat="server" SelectionMode="Multiple" CssClass="form-select" Rows="4">
+                        </asp:ListBox>
+                        <div class="invalid-feedback">Debe seleccionar al menos un proveedor.</div>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Descripción</span>
-                            <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Precio Actual</span>
+                        <asp:TextBox ID="txtPrecioActual" ClientIDMode="Static" runat="server" CssClass="form-control" ReadOnly="true" Enabled="false"></asp:TextBox>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Categoría</span>
-                            <asp:DropDownList ID="ddlCategoria" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione una categoría" Value="" />
-                            </asp:DropDownList>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Porcentaje Ganancia">Porcentaje G.</span>
+                        <asp:TextBox ID="txtPorcentajeGanancia" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="invalid-feedback">Ingrese un porcentaje de ganancia válido.</div>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Marca</span>
-                            <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione una marca" Value="" />
-                            </asp:DropDownList>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;">Stock Act.</span>
+                        <asp:TextBox ID="txtStockActual" ClientIDMode="Static" runat="server" CssClass="form-control" ReadOnly="true" Enabled="false"></asp:TextBox>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Proveedores</span>
-                            <asp:ListBox ID="lbProveedores" runat="server" SelectionMode="Multiple" CssClass="form-select" Rows="4">
-                            </asp:ListBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Stock Mínimo">Stock Mín.</span>
+                        <asp:TextBox ID="txtStockMinimo" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="soloNumeros(this);"></asp:TextBox>
+                        <div class="invalid-feedback">Ingrese un stock mínimo válido.</div>
+                    </div>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Precio Actual</span>
-                            <asp:TextBox ID="txtPrecioActual" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text fw-bold justify-content-center" style="width: 110px;">Activo</span>
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Porcentaje Ganancia">Porcentaje G.</span>
-                            <asp:TextBox ID="txtPorcentajeGanancia" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;">Stock Act.</span>
-                            <asp:TextBox ID="txtStockActual" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Stock Mínimo">Stock Mín.</span>
-                            <asp:TextBox ID="txtStockMinimo" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fw-bold justify-content-center" style="width: 110px;">Activo</span>
-    
-                            <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">  
-                    
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" />
-                                    <label class="form-check-label ms-2" for="<%= rbActivoSI.ClientID %>">
-                                        <span class="badge bg-success px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">SI</span>
-                                    </label>
-                                </div>
-
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" />
-                                    <label class="form-check-label ms-2" for="<%= rbActivoNO.ClientID %>">
-                                        <span class="badge bg-danger px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">NO</span>
-                                    </label>
-                                </div>
-
+                        <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">
+        
+                            <div id="divRbActivoSi" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" Enabled="false" />
+                                <label class="form-check-label ms-2" for="<%= rbActivoSI.ClientID %>">
+                                    <span class="badge bg-success px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">SI</span>
+                                </label>
                             </div>
-                        </div>
 
-                        <!-- Botones de Acción -->
-                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClick="btnGrabar_Click" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" OnClick="btnEliminar_Click"/>
-                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click"/>
-                        </div>
+                            <div id="divRbActivoNo" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" Enabled="false" />
+                                <label class="form-check-label ms-2" for="<%= rbActivoNO.ClientID %>">
+                                    <span class="badge bg-danger px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">NO</span>
+                                </label>
+                            </div>
 
+                        </div>
                     </div>
+
+                    <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
+                        <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
+                        <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
+                        <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" CausesValidation="false" OnClick= "btnCancelar_Click" />
+                    </div>
+
                 </div>
             </div>
-
         </div>
 
     </div>

@@ -24,15 +24,6 @@ namespace Presentacion.Inventario
         protected global::System.Web.UI.WebControls.GridView dgvProductos;
 
         /// <summary>
-        /// hfProductoId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfProductoId;
-
-        /// <summary>
         /// txtId control.
         /// </summary>
         /// <remarks>
@@ -132,6 +123,15 @@ namespace Presentacion.Inventario
         protected global::System.Web.UI.WebControls.TextBox txtStockMinimo;
 
         /// <summary>
+        /// divRbActivoSi control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRbActivoSi;
+
+        /// <summary>
         /// rbActivoSI control.
         /// </summary>
         /// <remarks>
@@ -139,6 +139,15 @@ namespace Presentacion.Inventario
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbActivoSI;
+
+        /// <summary>
+        /// divRbActivoNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRbActivoNo;
 
         /// <summary>
         /// rbActivoNO control.
@@ -150,6 +159,15 @@ namespace Presentacion.Inventario
         protected global::System.Web.UI.WebControls.RadioButton rbActivoNO;
 
         /// <summary>
+        /// lblError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblError;
+
+        /// <summary>
         /// btnGrabar control.
         /// </summary>
         /// <remarks>
@@ -159,13 +177,13 @@ namespace Presentacion.Inventario
         protected global::System.Web.UI.WebControls.Button btnGrabar;
 
         /// <summary>
-        /// btnEliminar control.
+        /// btnInactivar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEliminar;
+        protected global::System.Web.UI.WebControls.Button btnInactivar;
 
         /// <summary>
         /// btnCancelar control.
