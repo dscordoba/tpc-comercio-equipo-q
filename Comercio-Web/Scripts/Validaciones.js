@@ -46,6 +46,78 @@ function soloNumeros(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
 }
 
+// Bloquear letras, limitar enteros y permitir hasta 2 decimales
+function soloDecimales(input, maxEnteros = 10) {
+    let valor = input.value.replace(/,/g, '.').replace(/[^0-9.]/g, '');
+
+    const partes = valor.split('.');
+    if (partes.length > 2) {
+        valor = partes[0] + '.' + partes.slice(1).join('');
+    }
+
+    if (partes[0].length > maxEnteros) {
+        partes[0] = partes[0].substring(0, maxEnteros);
+    }
+
+    if (partes.length === 2) {
+        if (partes[1].length > 2) {
+            partes[1] = partes[1].substring(0, 2);
+        }
+        valor = partes[0] + '.' + partes[1];
+    } else {
+        valor = partes[0];
+    }
+
+    input.value = valor;
+}
+
+
+// Limitar cantidad máxima de caracteres
+function limitarCaracteres(input, max) {
+    if (input.value.length > max) {
+        input.value = input.value.substring(0, max);
+    }
+}
+
+// Valida que un ListBox de selección múltiple tenga al menos un ítem marcado
+function validarListaMultiple(elemento) {
+    if (!elemento) return false;
+    const tieneSeleccion = elemento.selectedOptions.length > 0;
+
+    if (tieneSeleccion) {
+        elemento.classList.remove("is-invalid");
+        elemento.classList.add("is-valid");
+        return true;
+    } else {
+        elemento.classList.remove("is-valid");
+        elemento.classList.add("is-invalid");
+        return false;
+    }
+}
+
+// Valida números >= 0 (acepta decimales con punto o coma - con un tope máximo opcional)
+function validarNumeroPositivo(elemento, permiteDecimales, maximo = Infinity) {
+    if (!elemento) return false;
+    const valor = elemento.value.trim().replace(",", ".");
+    const numero = parseFloat(valor);
+
+    let esValido = valor !== "" && !isNaN(numero) && numero >= 0 && numero <= maximo;
+
+    if (esValido && !permiteDecimales && !Number.isInteger(numero)) {
+        esValido = false;
+    }
+
+    if (esValido) {
+        elemento.classList.remove("is-invalid");
+        elemento.classList.add("is-valid");
+        return true;
+    } else {
+        elemento.classList.remove("is-valid");
+        elemento.classList.add("is-invalid");
+        return false;
+    }
+}
+
 //Validar CUIT (11 digitos)
 function validarCuit(input) {
     if (!input) return false;

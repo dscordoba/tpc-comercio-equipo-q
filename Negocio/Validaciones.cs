@@ -32,5 +32,22 @@ namespace Negocio
             string patron = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
             return Regex.IsMatch(email.Trim(), patron);
         }
+
+        // Valida que la cadena sea un número decimal positivo (admite punto o coma) y que no supere el límite máximo
+        public static bool NumeroDecimalPositivo(string cadena, decimal maximo = decimal.MaxValue)
+        {
+            if (string.IsNullOrWhiteSpace(cadena))
+                return false;
+
+            string valorNormalizado = cadena.Trim().Replace(',', '.');
+
+            if (decimal.TryParse(valorNormalizado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal resultado))
+            {
+                return resultado > 0 && resultado <= maximo;
+            }
+
+            return false;
+        }
+
     }
 }

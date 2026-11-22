@@ -1,5 +1,23 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Productos.aspx.cs" Inherits="Presentacion.Inventario.Producto" %>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script>
+        function validarProducto() {
+            const valCodigo         = validarRequerido(document.getElementById("txtCodigoArt"));
+            const valNombre         = validarRequerido(document.getElementById("txtNombre"));
+            const valCategoria      = validarRequerido(document.getElementById("ddlCategoria"));
+            const valMarca          = validarRequerido(document.getElementById("ddlMarca"));
+            const valProveedores    = validarListaMultiple(document.getElementById("lbProveedores"));
+            const valPorcentaje     = validarNumeroPositivo(document.getElementById("txtPorcentajeGanancia"), true, 999.99);
+
+            const txtStockMin       = document.getElementById("txtStockMinimo");
+            const valStockMin       = validarRequerido(txtStockMin) && soloNumeros(txtStockMin);
+
+            return valCodigo && valNombre && valCategoria && valMarca && valProveedores && valPorcentaje && valStockMin;
+        }
+    </script>
+</asp:Content> 
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- BREADCRUMB (Ruta superior) -->
@@ -61,20 +79,20 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text fw-bold" style="width: 110px;">Cod. Art.</span>
-                        <asp:TextBox ID="txtCodigoArt" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <span class="input-group-text fw-bold" style="width: 110px;" title="Código Artículo">Cod. Art.</span>
+                        <asp:TextBox ID="txtCodigoArt" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="limitarCaracteres(this, 9)"></asp:TextBox>
                         <div class="invalid-feedback">El código de artículo es requerido.</div>
                     </div>
 
                     <div class="input-group mb-3">
                         <span class="input-group-text fw-bold" style="width: 110px;">Nombre</span>
-                        <asp:TextBox ID="txtNombre" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <asp:TextBox ID="txtNombre" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="limitarCaracteres(this, 50)"></asp:TextBox>
                         <div class="invalid-feedback">El nombre es requerido.</div>
                     </div>
 
                     <div class="input-group mb-3">
                         <span class="input-group-text fw-bold" style="width: 110px;">Descripción</span>
-                        <asp:TextBox ID="txtDescripcion" ClientIDMode="Static" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                        <asp:TextBox ID="txtDescripcion" ClientIDMode="Static" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2" oninput="limitarCaracteres(this, 250)"></asp:TextBox>
                     </div>
 
                     <div class="input-group mb-3">
@@ -106,19 +124,19 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Porcentaje Ganancia">Porcentaje G.</span>
-                        <asp:TextBox ID="txtPorcentajeGanancia" ClientIDMode="Static" runat="server" CssClass="form-control"></asp:TextBox>
+                        <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Porcentaje Ganancia">% Ganancia</span>
+                        <asp:TextBox ID="txtPorcentajeGanancia" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="soloDecimales(this, 3); limitarCaracteres(this, 8);"></asp:TextBox>
                         <div class="invalid-feedback">Ingrese un porcentaje de ganancia válido.</div>
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text fw-bold" style="width: 110px;">Stock Act.</span>
+                        <span class="input-group-text fw-bold" style="width: 110px;" title="Stock Actual">Stock Act.</span>
                         <asp:TextBox ID="txtStockActual" ClientIDMode="Static" runat="server" CssClass="form-control" ReadOnly="true" Enabled="false"></asp:TextBox>
                     </div>
 
                     <div class="input-group mb-3">
                         <span class="input-group-text fw-bold" style="width: 110px;" data-bs-toggle="tooltip" title="Stock Mínimo">Stock Mín.</span>
-                        <asp:TextBox ID="txtStockMinimo" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="soloNumeros(this);"></asp:TextBox>
+                        <asp:TextBox ID="txtStockMinimo" ClientIDMode="Static" runat="server" CssClass="form-control" oninput="soloNumeros(this); limitarCaracteres(this, 6);"></asp:TextBox>
                         <div class="invalid-feedback">Ingrese un stock mínimo válido.</div>
                     </div>
 
@@ -148,7 +166,7 @@
 
                     <!-- Botones de Acción -->
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                        <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
+                        <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validarProducto();" OnClick="btnGrabar_Click" />
                         <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
                         <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" CausesValidation="false" OnClick= "btnCancelar_Click" />
                     </div>

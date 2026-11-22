@@ -133,17 +133,143 @@ namespace Presentacion.Inventario
 
         protected void btnGrabar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                lblError.Visible = false;
 
+                // Validaciones 
+                bool tieneProveedores = lbProveedores.Items.Cast<ListItem>().Any(item => item.Selected);
+
+                if (string.IsNullOrWhiteSpace(txtCodigoArt.Text) ||
+                    string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                    string.IsNullOrEmpty(ddlCategoria.SelectedValue) ||
+                    string.IsNullOrEmpty(ddlMarca.SelectedValue) ||
+                    !tieneProveedores ||
+                    !Validaciones.NumeroDecimalPositivo(txtPorcentajeGanancia.Text, 999.99m) ||
+                    !Validaciones.SoloNumeros(txtStockMinimo.Text.Trim()))
+                {
+                    lblError.Text = "Verifique que todos los campos obligatorios sean válidos.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                Dominio.Producto producto = new Dominio.Producto();
+                producto.CodigoProducto = txtCodigoArt.Text.Trim();
+                producto.Nombre = txtNombre.Text.Trim();
+                producto.Descripcion = txtDescripcion.Text.Trim();
+
+                // Normaliza el decimal por si ingresan coma
+                string gananciaNormalizada = txtPorcentajeGanancia.Text.Trim().Replace(',', '.');
+                producto.PorcentajeGanancia = decimal.Parse(gananciaNormalizada, System.Globalization.CultureInfo.InvariantCulture);
+
+                producto.StockMinimo = int.Parse(txtStockMinimo.Text.Trim());
+
+                // Captura de marca y categoria
+                producto.MarcaAsociada = new Marca();
+                producto.MarcaAsociada.Id = int.Parse(ddlMarca.SelectedValue);
+
+                producto.CategoriaAsociada = new Categoria();
+                producto.CategoriaAsociada.Id = int.Parse(ddlCategoria.SelectedValue);
+
+                // Captura de lista de proveedores seleccionados
+                producto.ProveedoresAsociados = new List<Proveedor>();
+                foreach (ListItem item in lbProveedores.Items)
+                {
+                    if (item.Selected)
+                    {
+                        Proveedor prov = new Proveedor();
+                        prov.Id = int.Parse(item.Value);
+                        producto.ProveedoresAsociados.Add(prov);
+                    }
+                }
+
+                ProductoNegocio negocio = new ProductoNegocio();
+
+                // Valida Session para saber si agrega o modifica
+                if (Session["productoSeleccionado"] == null)
+                {
+                    negocio.agregar(producto);
+                }
+                else
+                {
+                    Dominio.Producto seleccionado = (Dominio.Producto)Session["productoSeleccionado"];
+                    producto.Id = seleccionado.Id;
+                    negocio.modificar(producto);
+                }
+                Session.Remove("productoSeleccionado");
+                cargarTabla();
+                limpiarFormulario();
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
+            }
         }
 
         protected void btnInactivar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (Session["productoSeleccionado"] != null)
+                {
+                    Dominio.Producto seleccionado = (Dominio.Producto)Session["productoSeleccionado"];
+                    ProductoNegocio negocio = new ProductoNegocio();
 
+                    negocio.eliminarLogico(seleccionado.Id, !seleccionado.Activo);
+
+                    Session.Remove("productoSeleccionado");
+                    cargarTabla();
+                    limpiarFormulario();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-
+            limpiarFormulario();
         }
+
+        // Función para limpiar los inputs
+        private void limpiarFormulario()
+        {
+            Session.Remove("productoSeleccionado");
+
+            txtId.Text = string.Empty;
+            txtCodigoArt.Text = string.Empty;
+            txtNombre.Text = string.Empty;
+            txtDescripcion.Text = string.Empty;
+            txtPrecioActual.Text = string.Empty;
+            txtPorcentajeGanancia.Text = string.Empty;
+            txtStockActual.Text = string.Empty;
+            txtStockMinimo.Text = string.Empty;
+
+            ddlCategoria.SelectedIndex = 0;
+            ddlMarca.SelectedIndex = 0;
+
+            lbProveedores.ClearSelection(); // Limpia seleccionados
+
+            rbActivoSI.Checked = true;
+            rbActivoNO.Checked = false;
+            rbActivoSI.Enabled = false;
+            rbActivoNO.Enabled = false;
+
+            divRbActivoSi.Visible = true;
+            divRbActivoNo.Visible = false;
+
+            dgvProductos.SelectedIndex = -1;
+
+            btnInactivar.Visible = false;
+            btnInactivar.Enabled = false;
+
+            lblError.Text = string.Empty;
+            lblError.Visible = false;
+        }
+
     }
 }
