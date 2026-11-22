@@ -102,6 +102,9 @@ VALUES
     ('Logistica del Sur S.A.', '30-55443322-1', 'info@logisticadelsur.com.ar', '+541122223333', 0);
 GO
 
+CREATE PROCEDURE listarProveedores AS
+SELECT Id, RazonSocial, Cuit, Email, Telefono, Activo FROM PROVEEDORES
+
 -- CREAR TABLA VENTAS
 CREATE TABLE dbo.VENTAS (
     Id INT IDENTITY(1, 1)               NOT NULL,

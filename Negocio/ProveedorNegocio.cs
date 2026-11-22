@@ -44,7 +44,38 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+        public List<Proveedor> listarConSP()
+        {
+            List<Proveedor> lista = new List<Proveedor>();
+            ConexionDatos datos = new ConexionDatos();
+            try
+            {
+                datos.setearProcedimiento("listarProveedores");
+                datos.ejecutarLectura();
 
+                while(datos.Lector.Read())
+                {
+                    Proveedor aux = new Proveedor();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.RazonSocial = (string)datos.Lector["RazonSocial"];
+                    aux.Cuit = (string)datos.Lector["Cuit"];
+                    aux.Email = (string)datos.Lector["Email"];
+                    aux.Telefono = (string)datos.Lector["Telefono"];
+                    aux.Activo = bool.Parse(datos.Lector["Activo"].ToString());
+
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
         public void agregar(Proveedor nuevo)
         {
             ConexionDatos datos = new ConexionDatos();
@@ -110,6 +141,28 @@ namespace Negocio
             {
                 datos.setearConsulta("DELETE FROM PROVEEDORES WHERE Id = @id");
                 datos.setearParametro("@id", id);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        //Eliminación Lógica (Inactivar/Reactivar)
+        public void eliminarLogico(int id, bool activo = false)
+        {
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("UPDATE PROVEEDORES SET Activo = @activo WHERE Id = @id");
+                datos.setearParametro("@id", id);
+                datos.setearParametro("@activo", activo);
 
                 datos.ejecutarAccion();
             }

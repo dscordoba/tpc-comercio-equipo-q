@@ -45,3 +45,29 @@ function validarEmail(input) {
 function soloNumeros(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
 }
+
+//Validar CUIT (11 digitos)
+function validarCuit(input) {
+    if (!input) return false;
+    const limpio = input.value.replace(/[^0-9]/g, "");
+    const regexCuit = /^\d{11}$/;
+    if (!regexCuit.test(limpio)) {
+        marcarInvalido(input);
+        return false;
+    }
+    marcarValido(input);
+    return true;
+}
+
+//Validar Telefono (10 digitos)
+function validarTelefono(input) {
+    if (!input) return false;
+    const limpio = input.value.replace(/[^0-9]/g, "");
+    const regexTel = /^\d{10,15}$/;
+    if (!regexTel.test(limpio)) {
+        marcarInvalido(input);
+        return false;
+    }
+    marcarValido(input);
+    return true;
+}

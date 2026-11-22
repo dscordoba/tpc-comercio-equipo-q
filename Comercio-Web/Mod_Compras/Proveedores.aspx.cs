@@ -15,68 +15,108 @@ namespace Presentacion.Compras
         {
             if (!IsPostBack)
             {
+                btnInactivar.Visible = false;
+                btnInactivar.Enabled = false;
+                divRbActivoNo.Visible = false;
                 cargarGrilla();
             }
         }
         private void cargarGrilla()
         {
-            try
-            {
-                ProveedorNegocio negocio = new ProveedorNegocio();
-                dgvProveedores.DataSource = negocio.listar();
-                dgvProveedores.DataBind();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            ProveedorNegocio negocio = new ProveedorNegocio();
+            dgvProveedores.DataSource = negocio.listarConSP();
+            dgvProveedores.DataBind();
         }
 
+        private void limpiarFormulario()
+        {
+            Session.Remove("proveedorSeleccionado");
+            txtId.Text = string.Empty;
+            txtRazonSocial.Text = string.Empty;
+            txtCuit.Text = string.Empty;
+            txtEmail.Text = string.Empty;
+            txtTelefono.Text = string.Empty;
+
+            rbActivoSI.Checked = true;
+            rbActivoNO.Checked = false;
+
+            lblError.Visible = false;
+        }
         protected void btnGrabar_Click(object sender, EventArgs e)
         {
             try
             {
-                Proveedor nuevo = new Proveedor();
+                lblError.Visible = false;
+
+                if (string.IsNullOrWhiteSpace(txtRazonSocial.Text) ||
+                    !Validaciones.SoloNumeros(txtCuit.Text.Trim()) ||
+                    txtCuit.Text.Trim().Length < 11 ||
+                    !Validaciones.EmailValido(txtEmail.Text) ||
+                    !Validaciones.SoloNumeros(txtTelefono.Text.Trim()) ||
+                    txtTelefono.Text.Trim().Length < 10)
+                {
+                    lblError.Text = "Verifique que los campos obligatorios sean válidos.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                Proveedor proveedor = new Proveedor();
+                proveedor.RazonSocial = txtRazonSocial.Text.Trim();
+                proveedor.Cuit = txtCuit.Text.Trim();
+                proveedor.Email = txtEmail.Text.Trim();
+                proveedor.Telefono = txtTelefono.Text.Trim();
+
                 ProveedorNegocio negocio = new ProveedorNegocio();
 
-                nuevo.RazonSocial = txtRazonSocial.Text;
-                nuevo.Cuit = txtCuit.Text;
-                nuevo.Email = txtEmail.Text;
-                nuevo.Telefono = txtTelefono.Text;
-                nuevo.Activo = true;
+                if (Session["proveedorSeleccionado"] == null)
+                {
+                    negocio.agregar(proveedor);
+                }
+                else
+                {
+                    Proveedor seleccionado = (Proveedor)Session["proveedorSeleccionado"];
+                    proveedor.Id = seleccionado.Id;
+                    negocio.modificar(proveedor);
+                }
 
-                negocio.agregar(nuevo);
+                Session.Remove("proveedorSeleccionado");
                 cargarGrilla();
+                limpiarFormulario();
             }
+
             catch (Exception ex)
             {
-                throw ex;
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
             }
         }
 
-        protected void btnEliminar_Click(object sender, EventArgs e)
+        protected void btnInactivar_Click(object sender, EventArgs e)
         {
             try
             {
-                if(dgvProveedores.SelectedDataKey != null)
+                if(Session["proveedorSeleccionado"] != null)
                 {
-                    int id = int.Parse(dgvProveedores.SelectedDataKey.Value.ToString());
-
+                    Proveedor seleccionado = (Proveedor)Session["proveedorSeleccionado"];
                     ProveedorNegocio negocio = new ProveedorNegocio();
-                    negocio.eliminar(id);
 
+                    negocio.eliminarLogico(seleccionado.Id, !seleccionado.Activo);
+
+                    Session.Remove("proveedorSeleccionado");
                     cargarGrilla();
+                    limpiarFormulario();
                 }
             }
             catch (Exception ex)
             {
+                Session.Add("error", ex.ToString());
                 throw ex;
             }
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            dgvProveedores.SelectedIndex = -1;
+            limpiarFormulario();
         }
     }
 }
