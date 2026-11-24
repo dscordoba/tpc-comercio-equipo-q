@@ -15,6 +15,8 @@ namespace Presentacion.Mod_Inventario
         {
             if (!IsPostBack)
             {
+                btnInactivar.Visible = false;
+                divRbActivoNo.Visible = false;
                 cargarTabla();
             }
         }
@@ -29,12 +31,29 @@ namespace Presentacion.Mod_Inventario
 
             if (seleccionada != null)
             {
-                hfMarcaId.Value = seleccionada.Id.ToString();
+               
+                Session.Add("marcaSeleccionada", seleccionada);
                 txtId.Text = seleccionada.Id.ToString();
                 txtDescripcion.Text = seleccionada.Descripcion;
 
                 rbActivoSI.Checked = seleccionada.Activo;
                 rbActivoNO.Checked = !seleccionada.Activo;
+                btnInactivar.Visible = true;
+
+                if (!seleccionada.Activo)
+                {
+                    btnInactivar.Text = "Reactivar";
+                    btnInactivar.CssClass = "btn btn-success";
+                    divRbActivoSi.Visible = false;
+                    divRbActivoNo.Visible = true;
+                }
+                else
+                {
+                    btnInactivar.Text = "Inactivar";
+                    btnInactivar.CssClass = "btn btn-danger";
+                    divRbActivoNo.Visible = false;
+                    divRbActivoSi.Visible = true;
+                }
             }
         }
 
@@ -44,18 +63,19 @@ namespace Presentacion.Mod_Inventario
             {
                 Marca marca = new Marca();
                 marca.Descripcion = txtDescripcion.Text.Trim();
-                marca.Activo = rbActivoSI.Checked;
+                
 
                 MarcaNegocio negocio = new MarcaNegocio();
 
                 // si no hay id es una marca nueva, si hay id se modifica
-                if (string.IsNullOrEmpty(hfMarcaId.Value))
+                if (Session["marcaSeleccionada"] == null)
                 {
                     negocio.agregar(marca);
                 }
                 else
                 {
-                    marca.Id = int.Parse(hfMarcaId.Value);
+                    Marca seleccionada = (Marca)Session["marcaSeleccionada"];
+                    marca.Id = seleccionada.Id;
                     negocio.modificar(marca);
                 }
 
@@ -68,17 +88,23 @@ namespace Presentacion.Mod_Inventario
             }
         }
 
-        protected void btnEliminar_Click(object sender, EventArgs e)
+       
+
+        protected void btnInactivar_Click(object sender, EventArgs e)
         {
             try
             {
-                int idMarca = int.Parse(hfMarcaId.Value);
-                MarcaNegocio negocio = new MarcaNegocio();
+                if (Session["marcaSeleccionada"] != null)
+                {
+                    Marca seleccionada = (Marca)Session["marcaSeleccionada"];
+                    MarcaNegocio negocio = new MarcaNegocio();
 
-                negocio.eliminar(idMarca);
+                    // si estaba activa la inactiva, si no la reactiva
+                    negocio.eliminarLogico(seleccionada.Id, !seleccionada.Activo);
 
-                cargarTabla();
-                limpiarFormulario();
+                    cargarTabla();
+                    limpiarFormulario();
+                }
             }
             catch (Exception ex)
             {
@@ -102,7 +128,8 @@ namespace Presentacion.Mod_Inventario
         // deja el formulario vacio
         private void limpiarFormulario()
         {
-            hfMarcaId.Value = string.Empty;
+            Session.Remove("marcaSeleccionada");
+            
             txtId.Text = string.Empty;
             txtDescripcion.Text = string.Empty;
 
@@ -110,6 +137,9 @@ namespace Presentacion.Mod_Inventario
             rbActivoNO.Checked = false;
 
             dgvMarcas.SelectedIndex = -1;
+            btnInactivar.Visible = false;
+            divRbActivoSi.Visible = true;
+            divRbActivoNo.Visible = false;
         }
 
     }

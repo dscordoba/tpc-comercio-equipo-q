@@ -40,10 +40,10 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("INSERT INTO MARCAS (Descripcion, Activo) VALUES (@descripcion, @activo)");
+                datos.setearConsulta("INSERT INTO MARCAS (Descripcion) VALUES (@descripcion)");
 
                 datos.setearParametro("@descripcion", nueva.Descripcion);
-                datos.setearParametro("@activo", nueva.Activo);
+                
 
                 datos.ejecutarAccion();
             }
@@ -64,11 +64,11 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("UPDATE MARCAS SET Descripcion = @descripcion, Activo = @activo WHERE Id = @id");
+                datos.setearConsulta("UPDATE MARCAS SET Descripcion = @descripcion WHERE Id = @id");
 
                 datos.setearParametro("@id", marca.Id);
                 datos.setearParametro("@descripcion", marca.Descripcion);
-                datos.setearParametro("@activo", marca.Activo);
+                
 
                 datos.ejecutarAccion();
             }
@@ -82,15 +82,17 @@ namespace Negocio
             }
         }
 
-        // borra la marca de la base
-        public void eliminar(int id)
+
+        // inactiva o reactiva la marca, no la borra
+        public void eliminarLogico(int id, bool activo = false)
         {
             ConexionDatos datos = new ConexionDatos();
 
             try
             {
-                datos.setearConsulta("DELETE FROM MARCAS WHERE Id = @id");
+                datos.setearConsulta("UPDATE MARCAS SET Activo = @activo WHERE Id = @id");
                 datos.setearParametro("@id", id);
+                datos.setearParametro("@activo", activo);
 
                 datos.ejecutarAccion();
             }

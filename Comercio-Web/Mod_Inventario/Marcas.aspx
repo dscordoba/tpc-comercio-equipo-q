@@ -59,8 +59,7 @@
 
                         <h3 class="text-center mb-3 mb-md-4">Marca</h3>
 
-                        <asp:HiddenField ID="hfMarcaId" runat="server" />
-
+                      
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Id</span>
                             <asp:TextBox ID="txtId" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
@@ -76,15 +75,15 @@
 
                             <div class="form-control bg-white d-flex align-items-center justify-content-center gap-3">
 
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" />
+                                <div id="divRbActivoSi" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                    <asp:RadioButton ID="rbActivoSI" runat="server" GroupName="rbGrupoActivo" Checked="true" Enabled="false" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoSI.ClientID %>">
                                         <span class="badge bg-success px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">SI</span>
                                     </label>
                                 </div>
 
-                                <div class="form-check form-check-inline mb-0 d-flex align-items-center">
-                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" />
+                                <div id="divRbActivoNo" runat="server" class="form-check form-check-inline mb-0 d-flex align-items-center">
+                                    <asp:RadioButton ID="rbActivoNO" runat="server" GroupName="rbGrupoActivo" Enabled="false" />
                                     <label class="form-check-label ms-2" for="<%= rbActivoNO.ClientID %>">
                                         <span class="badge bg-danger px-2 py-1" style="font-size: 0.75rem; font-weight: 600;">NO</span>
                                     </label>
@@ -96,7 +95,7 @@
                         <!-- botones -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
                             <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClick="btnGrabar_Click" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-outline-danger px-3" OnClick="btnEliminar_Click" />
+                            <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
                             <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click" />
                         </div>
 

@@ -24,15 +24,6 @@ namespace Presentacion.Mod_Inventario
         protected global::System.Web.UI.WebControls.GridView dgvMarcas;
 
         /// <summary>
-        /// Control hfMarcaId.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfMarcaId;
-
-        /// <summary>
         /// Control txtId.
         /// </summary>
         /// <remarks>
@@ -51,6 +42,15 @@ namespace Presentacion.Mod_Inventario
         protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
 
         /// <summary>
+        /// Control divRbActivoSi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRbActivoSi;
+
+        /// <summary>
         /// Control rbActivoSI.
         /// </summary>
         /// <remarks>
@@ -58,6 +58,15 @@ namespace Presentacion.Mod_Inventario
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbActivoSI;
+
+        /// <summary>
+        /// Control divRbActivoNo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRbActivoNo;
 
         /// <summary>
         /// Control rbActivoNO.
@@ -78,13 +87,13 @@ namespace Presentacion.Mod_Inventario
         protected global::System.Web.UI.WebControls.Button btnGrabar;
 
         /// <summary>
-        /// Control btnEliminar.
+        /// Control btnInactivar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEliminar;
+        protected global::System.Web.UI.WebControls.Button btnInactivar;
 
         /// <summary>
         /// Control btnCancelar.
