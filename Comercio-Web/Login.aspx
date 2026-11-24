@@ -8,6 +8,16 @@
         <title>Iniciar Sesión - COMERCIO</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" runat="server" />
         <link href="~/Content/bootstrap.min.css" rel="stylesheet" runat="server" />
+        <script src='<%= ResolveUrl("~/Scripts/Validaciones.js") %>'></script>
+        <script>
+            function validar() {
+                const valUsuario = validarRequerido(document.getElementById("txtUsuario"));
+                const valPassword = validarRequerido(document.getElementById("txtPassword"));
+
+                return valUsuario && valPassword;
+            }
+
+        </script>
     </head>
     <body class="d-flex flex-column min-vh-100" style="background-color: #dfe4eb;">
 
@@ -45,22 +55,19 @@
                             <div class="card-body p-0">
 
                                 <!-- Mensaje de error / alerta -->
-                                <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger d-flex align-items-center small py-2 mb-3" role="alert">
-                                    <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0" viewBox="0 0 16 16" aria-hidden="true">
-                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                                    </svg>
-                                    <asp:Label ID="lblError" runat="server" Text=""></asp:Label>
-                                </asp:Panel>
+                                <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
 
                                 <div class="mb-3">
                                     <label for="<%= txtUsuario.ClientID %>" class="form-label fw-bold text-secondary small">Usuario</label>
                                     <asp:TextBox ID="txtUsuario" runat="server" CssClass="form-control" placeholder="Usuario"></asp:TextBox>
+                                    <div class="invalid-feedback">El usuario es requerido.</div>
                                 </div>
 
                                 <div class="mb-2">
                                     <label for="<%= txtPassword.ClientID %>" class="form-label fw-bold text-secondary small">Contraseña</label>
                                     <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" placeholder="••••••••"></asp:TextBox>
-                                </div>
+                                    <div class="invalid-feedback">La contraseña es requerida.</div>                               
+                                    </div>
 
                                 <div class="text-end mb-4">
                                     <a href="#" class="text-primary small text-decoration-none fw-semibold" data-bs-toggle="modal" data-bs-target="#modalOlvidePass">
@@ -69,7 +76,7 @@
                                 </div>
 
                                 <div class="d-grid mb-3">
-                                    <asp:Button ID="btnIngresar" runat="server" Text="Ingresar al Sistema »" CssClass="btn btn-primary fw-bold py-2 rounded-pill shadow-sm" OnClick="btnIngresar_Click" />
+                                    <asp:Button ID="btnIngresar" runat="server" Text="Ingresar al Sistema »" CssClass="btn btn-primary fw-bold py-2 rounded-pill shadow-sm" OnClientClick="return validar();" OnClick="btnIngresar_Click" />
                                 </div>
 
                                 <hr class="text-muted my-3" />
@@ -124,6 +131,14 @@
         </form>
 
         <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
+        <script type="text/javascript">
+            document.addEventListener("keydown", function(event) {
+                // Bloquea el Enter solo si el usuario está escribiendo dentro de una caja de texto (TextBox)
+                if (event.key === "Enter" && event.target.tagName === "INPUT" && (event.target.type === "text" || event.target.type === "number" || event.target.type === "email")) {
+                    event.preventDefault();
+                }
+            });
+        </script>
 
     </body>
 </html>

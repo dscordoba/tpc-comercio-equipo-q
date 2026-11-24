@@ -10,6 +10,43 @@ namespace Negocio
 {
     public class UsuarioNegocio
     {
+        public bool login(Usuario usuario)
+        {
+            ConexionDatos datos = new ConexionDatos();
+            try
+            {
+                datos.setearConsulta("SELECT Id, Nombre, Apellido, Perfil, Activo FROM Usuarios WHERE NombreUsuario = @nombreUsuario AND Contraseña = @pass");
+                datos.setearParametro("@nombreUsuario", usuario.NombreUsuario);
+                datos.setearParametro("@pass", usuario.Contraseña);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    usuario.Id = (int)datos.Lector["Id"];
+
+                    if (!(datos.Lector["Nombre"] is DBNull))
+                        usuario.Nombre = datos.Lector["Nombre"].ToString(); 
+
+                    if (!(datos.Lector["Apellido"] is DBNull))
+                        usuario.Apellido = datos.Lector["Apellido"].ToString();
+
+                    usuario.TipoPerfil = (TipoPerfil)(int)datos.Lector["Perfil"];
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public List<Usuario> listar()
         {
             List<Usuario> lista = new List<Usuario>();
@@ -31,7 +68,7 @@ namespace Negocio
                     aux.Activo = (bool)datos.Lector["Activo"];
                     aux.NombreUsuario = (string)datos.Lector["NombreUsuario"];
                     aux.Contraseña = (string)datos.Lector["Contraseña"];
-                    aux.Perfil = (string)datos.Lector["Perfil"];
+                    aux.TipoPerfil = (TipoPerfil)(int)datos.Lector["Perfil"];
 
                     lista.Add(aux);
                 }
@@ -67,7 +104,7 @@ namespace Negocio
                 datos.setearParametro("@activo", nuevo.Activo);
                 datos.setearParametro("@nombreUsuario", nuevo.NombreUsuario);
                 datos.setearParametro("@contrasenia", nuevo.Contraseña);
-                datos.setearParametro("@perfil", nuevo.Perfil);
+                datos.setearParametro("@perfil", (int)nuevo.TipoPerfil);
 
                 datos.ejecutarAccion();
             }
@@ -103,7 +140,7 @@ namespace Negocio
                 datos.setearParametro("@activo", usuario.Activo);
                 datos.setearParametro("@nombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@contrasenia", usuario.Contraseña);
-                datos.setearParametro("@perfil", usuario.Perfil);
+                datos.setearParametro("@perfil", (int)usuario.TipoPerfil);
 
                 datos.ejecutarAccion();
             }
