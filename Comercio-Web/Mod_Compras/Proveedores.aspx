@@ -36,7 +36,7 @@ function validarProveedores() {
                     <h3 class="text-center mb-3 mb-md-4">Listado de Proveedores</h3>
 
                     <div class="table-responsive">
-                        <asp:GridView ID="dgvProveedores" runat="server" AutoGenerateColumns="false" CssClass="table table-striped table-hover border align-middle mb-0">
+                        <asp:GridView ID="dgvProveedores" runat="server" AutoGenerateColumns="false" DataKeyNames="Id" OnSelectedIndexChanged="dgvProveedores_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0">
                             <HeaderStyle CssClass="table-info" />
                             <Columns>
                                 <asp:BoundField DataField="Id" HeaderText="Id" />

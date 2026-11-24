@@ -41,7 +41,57 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+        public List<Categoria> listarConSP()
+        {
+            List<Categoria> lista = new List<Categoria>();
+            ConexionDatos datos = new ConexionDatos();
+            try
+            {
+                datos.setearProcedimiento("listarCategorias");
+                datos.ejecutarLectura();
 
+                while (datos.Lector.Read())
+                {
+                    Categoria aux = new Categoria();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.Activo = bool.Parse(datos.Lector["Activo"].ToString());
+
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void eliminarLogico(int id, bool activo = false)
+        {
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("UPDATE CATEGORIA SET Activo = @ activo WHERE Id = @id");
+                datos.setearParametro("@id", id);
+                datos.setearParametro("@activo", activo);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
         public void agregar(Categoria nueva)
         {
             ConexionDatos datos = new ConexionDatos();

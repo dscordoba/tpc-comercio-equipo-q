@@ -144,6 +144,7 @@ function validarTelefono(input) {
     return true;
 }
 
+
 // Validar coincidencia de contraseñas
 function validarPasswordsIguales(inputPass, inputConfirm) {
     if (!inputPass || !inputConfirm) return false;
@@ -173,5 +174,85 @@ function togglePassword(inputId, btn) {
         input.type = "password";
         eye.classList.remove("d-none");
         eyeSlash.classList.add("d-none");
+    }
+
+    //validar Fecha
+    function validarFecha(input) {
+        if (!input || input.value.trim() === "") {
+            if (input) marcarInvalido(input);
+            return false;
+        }
+
+        //Para inputs tipo date("yyyy-mm-dd"), parseamos año, mes y dia de manera segura
+        const partes = input.value.trim().split("-");
+        if (partes.lentgh !== 3) {
+            marcarInvalido(input);
+            return false;
+        }
+
+        const anio = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const dia = parseInt(partes[2], 10);
+
+        const fecha = new Date(anio, mes - 1, dia);
+        const esFechaReal =
+            fecha.getFullYear() === anio &&
+            fecha.getMonth() === mes - 1 &&
+            fecha.getDate() === dia;
+
+        if (!esFechaReal) {
+            marcarInvalido(input);
+            return false;
+        }
+
+        //Para evitar fechas futuras
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        if (fecha > hoy) {
+            marcarInvalido(input);
+            return false;
+        }
+        marcarValido(input);
+        return true;
+    }
+
+//validar Fecha
+    function validarFecha(input) {
+        if (!input || input.value.trim() === "") {
+            if (input) marcarInvalido(input);
+            return false;
+        }
+
+        //Para inputs tipo date("yyyy-mm-dd"), parseamos año, mes y dia de manera segura
+        const partes = input.value.trim().split("-");
+        if (partes.lentgh !== 3) {
+            marcarInvalido(input);
+            return false;
+        }
+
+        const anio = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const dia = parseInt(partes[2], 10);
+
+        const fecha = new Date(anio, mes - 1, dia);
+        const esFechaReal =
+            fecha.getFullYear() === anio &&
+            fecha.getMonth() === mes - 1 &&
+            fecha.getDate() === dia;
+
+        if (!esFechaReal) {
+            marcarInvalido(input);
+            return false;
+        }
+
+        //Para evitar fechas futuras
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        if (fecha > hoy) {
+            marcarInvalido(input);
+            return false;
+        }
+        marcarValido(input);
+        return true;
     }
 }

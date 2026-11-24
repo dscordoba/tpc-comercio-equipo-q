@@ -18,9 +18,54 @@ namespace Presentacion.Compras
                 btnInactivar.Visible = false;
                 btnInactivar.Enabled = false;
                 divRbActivoNo.Visible = false;
+                lblError.Visible = false;
                 cargarGrilla();
             }
         }
+
+        protected void dgvProveedores_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSeleccionado = Convert.ToInt32(dgvProveedores.SelectedDataKey.Value);
+
+            ProveedorNegocio negocio = new ProveedorNegocio(); ;
+            Proveedor seleccionado = negocio.listarConSP().Find(x => x.Id == idSeleccionado);
+
+            if (seleccionado != null)
+            {
+                lblError.Visible = false;
+
+                Session.Add("proveedorSeleccionado", seleccionado);
+
+                txtId.Text = seleccionado.Id.ToString();
+                txtRazonSocial.Text = seleccionado.RazonSocial;
+                txtCuit.Text = seleccionado.Cuit;
+                txtEmail.Text = seleccionado.Email;
+                txtTelefono.Text = seleccionado.Telefono;
+
+                rbActivoSI.Checked = seleccionado.Activo;
+                rbActivoNO.Checked = !seleccionado.Activo;
+
+                btnInactivar.Visible = true;
+                btnInactivar.Enabled = true;
+
+                if(!seleccionado.Activo)
+                {
+                    btnInactivar.Text = "Reactivar";
+                    btnInactivar.CssClass = "btn btn-succes";
+                    divRbActivoSi.Visible = false;
+                    divRbActivoNo.Visible = true;
+                }
+                else
+                {
+                    btnInactivar.Text = "Inactivar";
+                    btnInactivar.CssClass = "btn btn-danger";
+                    divRbActivoNo.Visible = false;
+                    divRbActivoSi.Visible = true;
+                }
+
+            }
+        }
+        
         private void cargarGrilla()
         {
             ProveedorNegocio negocio = new ProveedorNegocio();
@@ -39,6 +84,14 @@ namespace Presentacion.Compras
 
             rbActivoSI.Checked = true;
             rbActivoNO.Checked = false;
+
+            dgvProveedores.SelectedIndex = -1;
+
+            btnInactivar.Visible = false;
+            btnInactivar.Enabled = false;
+
+            divRbActivoSi.Visible = true;
+            divRbActivoNo.Visible = false;
 
             lblError.Visible = false;
         }

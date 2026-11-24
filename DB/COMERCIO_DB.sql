@@ -57,7 +57,7 @@ CREATE TABLE dbo.USUARIOS (
     Activo              BIT                 NOT NULL            DEFAULT 1,
     NombreUsuario       VARCHAR(50)         NOT NULL UNIQUE,
     Contraseña          VARCHAR(100)        NOT NULL,
-    Perfil              INT                 NOT NULL            DEFAULT 0;
+    Perfil              INT                 NOT NULL            DEFAULT 0,
 
     CONSTRAINT PK_USUARIOS                  PRIMARY KEY (Id)
 );
@@ -121,6 +121,62 @@ CREATE TABLE dbo.VENTAS (
 );
 GO
 
+-- CREAR TABLA DE DETALLE_VENTAS
+CREATE TABLE dbo.DETALLE_VENTAS (
+    Id              INT IDENTITY(1, 1)      NOT NULL,
+    IdVenta         INT                     NOT NULL,
+    IdProducto      INT                     NOT NULL,
+    Cantidad        INT                     NOT NULL,
+    PrecioUnitario  DECIMAL(18, 2)          NOT NULL,
+
+    CONSTRAINT PK_DETALLE_VENTAS            PRIMARY KEY(Id),
+    CONSTRAINT FK_DETALLE_VENTAS_VENTAS     FOREIGN KEY(IdVenta)        REFERENCES dbo.VENTAS(id),
+    CONSTRAINT FK_DETALLE_VENTAS_PRODUCTOS  FOREIGN KEY(IdProducto)     REFERENCES dbo.PRODUCTOS(Id)
+);
+GO
+
+CREATE PROCEDURE dbo.sp_ObtenerProximoNumeroFactura
+AS
+BEGIN
+    DECLARE @UltimoNumero INT;
+
+    SELECT @UltimoNumero = ISNULL(MAX(TRY_CAST(NumeroFactura AS INT)), 0)
+    FROM dbo.VENTAS;
+
+    SELECT RIGHT('00000000' + CAST(@UltimoNumero + 1 AS VARCHAR(20)), 8) AS ProximoNumero;
+END
+GO
+
+CREATE PROCEDURE dbo.sp_InsertarVenta
+    @NumeroFactura      VARCHAR(50),
+    @Fecha              DATETIME,
+    @IdCliente          INT,
+    @TotalFinal         DECIMAL(18,2)
+AS
+BEGIN
+    INSERT INTO dbo.VENTAS(NumeroFactura, Fecha, IdCliente, TotalFinal)
+    VALUES(@NumeroFactura, @Fecha, @IdCliente, @TotalFinal);
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS IdVenta;
+END
+GO
+
+CREATE PROCEDURE dbo.sp_AgregarLineaVenta
+    @IdVenta        INT,
+    @IdProducto     INT,
+    @Cantidad       INT,
+    @PrecioUnitario DECIMAL(18, 2)
+AS
+BEGIN
+    INSERT INTO dbo.DETALLE_VENTAS(IdVenta, IdProducto, Cantidad, PrecioUnitario)
+    VALUES(@IdVenta, @IdProducto, @Cantidad, @PrecioUnitario);
+
+    UPDATE dbo.PRODUCTOS
+    SET StockActual = StockActual - @Cantidad
+    WHERE Id = @IdProducto;
+END
+GO
+
 -- CREAR TABLA PRODUCTOS
 CREATE TABLE dbo.PRODUCTOS (
     Id                  INT IDENTITY(1,1)   NOT NULL,
@@ -160,6 +216,26 @@ VALUES
     ('LOG-G502', 'Mouse Gamer G502 Hero', 'Mouse óptico con cable, sensor 25K DPI, 11 botones', 0, 50.00, 0, 10, 3, 2, 1),
     ('SON-WH1000', 'Auriculares Sony WH-1000XM5', 'Auriculares inalámbricos con cancelación de ruido', 0, 30.00, 0, 4, 4, 2, 1);
 GO
+
+UPDATE dbo.PRODUCTOS
+SET PrecioCompraActual = 500000.00,
+    StockActual = 15
+WHERE CodigoProducto = 'SAM-TV50';
+
+UPDATE dbo.PRODUCTOS
+SET PrecioCompraActual = 180000.00,
+    StockActual = 10
+WHERE CodigoProducto = 'PHI-CAF01';
+
+UPDATE dbo.PRODUCTOS
+SET PrecioCompraActual = 85000.00,
+    StockActual = 25
+WHERE CodigoProducto = 'LOG-G502';
+
+UPDATE dbo.PRODUCTOS
+SET PrecioCompraActual = 420000.00,
+    StockActual = 12
+WHERE CodigoProducto = 'SON-WH1000';
 
 -- CREAR TABLA PARA ASOCIAR PRODUCTOS_PROVEEDORES
 CREATE TABLE dbo.PRODUCTOS_PROVEEDORES (
