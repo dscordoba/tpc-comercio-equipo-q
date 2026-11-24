@@ -45,6 +45,7 @@ GO
 -- STORE PROCEDURE TABLA CLIENTES
 CREATE PROCEDURE listarClientes as
 SELECT Id, Nombre, Apellido, Dni, Email, Activo FROM CLIENTES
+GO
 
 -- CREAR TABLA USUARIOS
 CREATE TABLE dbo.USUARIOS (
@@ -55,17 +56,18 @@ CREATE TABLE dbo.USUARIOS (
     Email               VARCHAR(150)        NOT NULL UNIQUE,
     Activo              BIT                 NOT NULL            DEFAULT 1,
     NombreUsuario       VARCHAR(50)         NOT NULL UNIQUE,
-    Clave               VARCHAR(100)        NOT NULL,
-    Perfil              VARCHAR(20)         NOT NULL,
+    Contraseña          VARCHAR(100)        NOT NULL,
+    Perfil              INT                 NOT NULL            DEFAULT 0;
 
     CONSTRAINT PK_USUARIOS                  PRIMARY KEY (Id)
 );
 GO
 
 -- INSERT TABLA USUARIOS
-INSERT INTO USUARIOS (Nombre, Apellido, Dni, Email, Activo, NombreUsuario, Clave, Perfil)
-VALUES ('Admin', 'Sistema', '10000001', 'admin@comercio.com', 1, 'admin', '1234', 'Administrador'),
-       ('Vera', 'Vendedora', '10000002', 'vera@comercio.com', 1, 'vera', '1234', 'Vendedor');
+INSERT INTO USUARIOS (Nombre, Apellido, Dni, Email, Activo, NombreUsuario, Contraseña, Perfil)
+VALUES ('Juan', 'Perez', '10000000', 'jperez@comercio.com', 1, 'jperez@comercio.com', '1234', '0'),
+        ('Admin', 'Sistema', '10000001', 'admin@comercio.com', 1, 'admin', '1234', '1'),
+       ('Vera', 'Vendedora', '10000002', 'vera@comercio.com', 1, 'vera', '1234', '2');
 GO
 
 -- CREAR TABLA CATEGORIAS
@@ -104,6 +106,7 @@ GO
 
 CREATE PROCEDURE listarProveedores AS
 SELECT Id, RazonSocial, Cuit, Email, Telefono, Activo FROM PROVEEDORES
+GO
 
 -- CREAR TABLA VENTAS
 CREATE TABLE dbo.VENTAS (
