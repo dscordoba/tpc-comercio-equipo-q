@@ -47,6 +47,23 @@ namespace Negocio
             }
         }
 
+        public void registrar(Usuario nuevo)
+        {
+            if (existeDni(nuevo.Dni))
+            {
+                throw new Exception("El DNI ingresado ya se encuentra registrado.");
+            }
+
+            if (existeEmail(nuevo.Email))
+            {
+                throw new Exception("El correo electrónico ingresado ya se encuentra registrado.");
+            }
+
+            nuevo.Activo = true;
+            nuevo.TipoPerfil = TipoPerfil.SIN_ASIGNAR;
+            agregar(nuevo);
+        }
+
         public List<Usuario> listar()
         {
             List<Usuario> lista = new List<Usuario>();
@@ -92,6 +109,12 @@ namespace Negocio
 
             try
             {
+                nuevo.Email = nuevo.Email.Trim().ToLower();
+                if (string.IsNullOrEmpty(nuevo.NombreUsuario))
+                {
+                    nuevo.NombreUsuario = nuevo.Email;
+                }
+
                 datos.setearConsulta(
                     "INSERT INTO USUARIOS (Nombre, Apellido, Dni, Email, Activo, NombreUsuario, Contraseña, Perfil) " +
                     "VALUES (@nombre, @apellido, @dni, @email, @activo, @nombreUsuario, @contrasenia, @perfil)"
@@ -165,6 +188,60 @@ namespace Negocio
                 datos.setearParametro("@id", id);
 
                 datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        // Valida si el DNI ya está registrado en BD
+        public bool existeDni(string dni)
+        {
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(1) FROM Usuarios WHERE Dni = @dni");
+                datos.setearParametro("@dni", dni);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    return Convert.ToInt32(datos.Lector[0]) > 0;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        // Valida si el Email ya está registrado en BD
+        public bool existeEmail(string email)
+        {
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(1) FROM USUARIOS WHERE Email = @email");
+                datos.setearParametro("@email", email.Trim().ToLower());
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    return Convert.ToInt32(datos.Lector[0]) > 0;
+                }
+                return false;
             }
             catch (Exception ex)
             {

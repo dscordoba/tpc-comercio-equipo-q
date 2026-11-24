@@ -8,8 +8,38 @@
         <title>Registrarse - COMERCIO</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" runat="server" />
         <link href="~/Content/bootstrap.min.css" rel="stylesheet" runat="server" />
+        <script src='<%= ResolveUrl("~/Scripts/Validaciones.js") %>'></script>
+        <script>
+            function validarRegistro() {
+                // Oculta cualquier error previo que haya quedado del servidor
+                const lblError = document.getElementById("<%= lblError.ClientID %>");
+                if (lblError) {
+                    lblError.innerText = "";
+                    lblError.classList.add("d-none");
+                    lblError.style.display = "none";
+                }
+
+                const txtPass = document.getElementById("<%= txtPassword.ClientID %>");
+                const txtConfirm = document.getElementById("<%= txtConfirmarPassword.ClientID %>");
+
+                const valNombre = validarRequerido(document.getElementById("<%= txtNombre.ClientID %>"));
+                const valApellido = validarRequerido(document.getElementById("<%= txtApellido.ClientID %>"));
+                const valDni = validarDni(document.getElementById("<%= txtDni.ClientID %>"));
+                const valEmail = validarEmail(document.getElementById("<%= txtEmail.ClientID %>"));
+                const valPassword = validarRequerido(txtPass);
+                const valConfirmar = validarPasswordsIguales(txtPass, txtConfirm);
+
+                return valNombre && valApellido && valDni && valEmail && valPassword && valConfirmar;
+            }
+        </script>
     </head>
     <body class="d-flex flex-column min-vh-100" style="background-color: #dfe4eb;">
+
+        <asp:Panel ID="pnlExito" runat="server" Visible="false" CssClass="alert alert-success text-center my-4">
+            <h5 class="fw-bold">¡Registro enviado con éxito!</h5>
+            <p class="mb-3">Tu cuenta fue creada y se encuentra <strong>pendiente de aprobación por un administrador</strong>. Podrás iniciar sesión una vez que sea habilitada.</p>
+            <a href="Login.aspx" class="btn btn-primary">Ir al Inicio de Sesión</a>
+        </asp:Panel>
 
         <form id="formRegistro" runat="server" class="d-flex flex-column flex-grow-1">
 
@@ -45,36 +75,32 @@
                         <div class="card border-0 shadow-sm p-3 p-md-4">
                             <div class="card-body p-0">
 
-                                <!-- Mensaje de error / alerta -->
-                                <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-danger d-flex align-items-center small py-2 mb-3" role="alert">
-                                    <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0" viewBox="0 0 16 16" aria-hidden="true">
-                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                                    </svg>
-                                    <asp:Label ID="lblMensaje" runat="server" Text=""></asp:Label>
-                                </asp:Panel>
-
                                 <!-- Datos Personales -->
                                 <h6 class="fw-bold text-secondary text-uppercase small mb-3">Datos Personales</h6>
 
                                 <div class="row g-2 mb-3">
                                     <div class="col-12 col-sm-6">
                                         <label for="<%= txtNombre.ClientID %>" class="form-label fw-bold text-secondary small">Nombre</label>
-                                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ej. Juan"></asp:TextBox>
+                                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" oninput="limitarCaracteres(this, 50)" placeholder="Ej. Juan"></asp:TextBox>
+                                        <div class="invalid-feedback">El nombre es requerido.</div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <label for="<%= txtApellido.ClientID %>" class="form-label fw-bold text-secondary small">Apellido</label>
-                                        <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" placeholder="Ej. Pérez"></asp:TextBox>
+                                        <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" oninput="limitarCaracteres(this, 50)" placeholder="Ej. Pérez"></asp:TextBox>
+                                        <div class="invalid-feedback">El apellido es requerido.</div>
                                     </div>
                                 </div>
 
                                 <div class="row g-2 mb-3">
                                     <div class="col-12 col-sm-5">
                                         <label for="<%= txtDni.ClientID %>" class="form-label fw-bold text-secondary small">DNI</label>
-                                        <asp:TextBox ID="txtDni" runat="server" CssClass="form-control" MaxLength="8" placeholder="Ej. 38123456"></asp:TextBox>
+                                        <asp:TextBox ID="txtDni" runat="server" CssClass="form-control" MaxLength="8" oninput="soloNumeros(this);" placeholder="Ej. 38123456"></asp:TextBox>
+                                        <div class="invalid-feedback">Ingrese un DNI válido (7 u 8 números).</div>
                                     </div>
                                     <div class="col-12 col-sm-7">
                                         <label for="<%= txtEmail.ClientID %>" class="form-label fw-bold text-secondary small">Correo Electrónico</label>
-                                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" placeholder="juan@comercio.com"></asp:TextBox>
+                                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" oninput="limitarCaracteres(this, 100)" placeholder="juan@comercio.com"></asp:TextBox>
+                                        <div class="invalid-feedback">Ingrese un email válido (ej: usuario@dominio.com).</div>
                                     </div>
                                 </div>
 
@@ -86,16 +112,20 @@
                                 <div class="row g-2 mb-4">
                                     <div class="col-12 col-sm-6">
                                         <label for="<%= txtPassword.ClientID %>" class="form-label fw-bold text-secondary small">Contraseña</label>
-                                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" placeholder="••••••••"></asp:TextBox>
+                                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" oninput="limitarCaracteres(this, 50)" placeholder="••••••••"></asp:TextBox>
+                                        <div class="invalid-feedback">La contraseña es requerida.</div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <label for="<%= txtConfirmarPassword.ClientID %>" class="form-label fw-bold text-secondary small">Repetir Contraseña</label>
-                                        <asp:TextBox ID="txtConfirmarPassword" runat="server" TextMode="Password" CssClass="form-control" placeholder="••••••••"></asp:TextBox>
+                                        <asp:TextBox ID="txtConfirmarPassword" runat="server" TextMode="Password" CssClass="form-control" oninput="limitarCaracteres(this, 50)" placeholder="••••••••"></asp:TextBox>
+                                        <div class="invalid-feedback">Las contraseñas no coinciden.</div>
                                     </div>
                                 </div>
 
+                                <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
+
                                 <div class="d-grid mb-3">
-                                    <asp:Button ID="btnRegistrar" runat="server" Text="Crear Cuenta »" CssClass="btn btn-primary fw-bold py-2 rounded-pill shadow-sm" OnClick="btnRegistrar_Click" />
+                                    <asp:Button ID="btnRegistrar" runat="server" Text="Crear Cuenta »" CssClass="btn btn-primary fw-bold py-2 rounded-pill shadow-sm" OnClientClick="return validarRegistro();" OnClick="btnRegistrar_Click" />
                                 </div>
 
                                 <hr class="text-muted my-3" />
@@ -129,4 +159,3 @@
 
     </body>
 </html>
-

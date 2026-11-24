@@ -18,5 +18,11 @@ namespace Dominio
         public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }
         public TipoPerfil TipoPerfil { get; set; }
+
+        public Usuario()
+        {
+            TipoPerfil = TipoPerfil.SIN_ASIGNAR; 
+            Activo = true;
+        }
     }
 }

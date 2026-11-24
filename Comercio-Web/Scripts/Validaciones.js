@@ -143,3 +143,16 @@ function validarTelefono(input) {
     marcarValido(input);
     return true;
 }
+
+// Validar coincidencia de contraseñas
+function validarPasswordsIguales(inputPass, inputConfirm) {
+    if (!inputPass || !inputConfirm) return false;
+
+    if (inputPass.value.trim() === "" || inputPass.value !== inputConfirm.value) {
+        inputConfirm.classList.add("is-invalid");
+        return false;
+    }
+
+    inputConfirm.classList.remove("is-invalid");
+    return true;
+}
