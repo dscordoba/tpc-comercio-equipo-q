@@ -156,3 +156,22 @@ function validarPasswordsIguales(inputPass, inputConfirm) {
     inputConfirm.classList.remove("is-invalid");
     return true;
 }
+
+// Manejo visual de contraseñas desde icono
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const eye = btn.querySelector(".icon-eye");
+    const eyeSlash = btn.querySelector(".icon-eye-slash");
+
+    if (!input || !eye || !eyeSlash) return;
+
+    if (input.type === "password") {
+        input.type = "text";
+        eye.classList.add("d-none");
+        eyeSlash.classList.remove("d-none");
+    } else {
+        input.type = "password";
+        eye.classList.remove("d-none");
+        eyeSlash.classList.add("d-none");
+    }
+}
