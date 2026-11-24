@@ -29,7 +29,7 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Proveedor</span>
-                            <asp:DropDownList ID="ddlProveedor" runat="server" CssClass="form-select">
+                            <asp:DropDownList ID="ddlProveedor" runat="server" CssClass="form-select" AppendDataBoundItems="true">
                                 <asp:ListItem Text="Seleccione un proveedor" Value="" />
                             </asp:DropDownList>
                         </div>
@@ -54,7 +54,7 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Producto</span>
-                            <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-select">
+                            <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-select" AppendDataBoundItems="true">
                                 <asp:ListItem Text="Seleccione un producto" Value="" />
                             </asp:DropDownList>
                         </div>
@@ -68,9 +68,10 @@
                             <span class="input-group-text fw-bold" style="width: 110px;">Precio</span>
                             <asp:TextBox ID="txtPrecioCompra" runat="server" CssClass="form-control"></asp:TextBox>
                         </div>
+                        <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
 
                         <div class="d-flex justify-content-center mt-4">
-                            <asp:Button ID="btnAgregarLinea" runat="server" Text="Agregar" CssClass="btn btn-primary px-3" />
+                           <asp:Button ID="btnAgregarLinea" runat="server" Text="Agregar" CssClass="btn btn-primary px-3" OnClick="btnAgregarLinea_Click" />
                         </div>
 
                     </div>
@@ -93,7 +94,11 @@
                                 CssClass="table table-striped table-hover border align-middle mb-0">
                                 <HeaderStyle CssClass="table-info" />
                                 <Columns>
-                                    <asp:BoundField DataField="Producto" HeaderText="Producto" />
+                                    <asp:TemplateField HeaderText="Producto">
+                                        <ItemTemplate>
+                                            <%# Eval("ProductoAsociado.Nombre") %>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
                                     <asp:BoundField DataField="PrecioCompra" HeaderText="Precio" />
                                     <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" />
@@ -115,7 +120,7 @@
                     </div>
                 </div>
             </div>
-
+           
         </div>
 
     </div>
