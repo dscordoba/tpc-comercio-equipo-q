@@ -228,4 +228,57 @@ BEGIN
         ON PR.Id = PP.IdProveedor
     WHERE PP.IdProducto = @IdProducto;
 END
+
 GO
+
+-- CREAR TABLA COMPRAS
+CREATE TABLE dbo.COMPRAS (
+    Id              INT IDENTITY(1,1)   NOT NULL,
+    NumeroFactura   VARCHAR(50)         NOT NULL,
+    Fecha           DATETIME            NOT NULL    DEFAULT GETDATE(),
+    IdProveedor     INT                 NOT NULL,
+
+    CONSTRAINT PK_COMPRAS                       PRIMARY KEY (Id),
+    CONSTRAINT FK_COMPRAS_PROVEEDORES           FOREIGN KEY (IdProveedor) REFERENCES dbo.PROVEEDORES(Id),
+    CONSTRAINT UQ_COMPRAS_PROVEEDOR_FACTURA     UNIQUE (IdProveedor, NumeroFactura)
+);
+GO
+
+-- CREAR TABLA DETALLE_COMPRAS
+CREATE TABLE dbo.DETALLE_COMPRAS (
+    Id              INT IDENTITY(1,1)   NOT NULL,
+    IdCompra        INT                 NOT NULL,
+    IdProducto      INT                 NOT NULL,
+    Cantidad        INT                 NOT NULL,
+    PrecioCompra    DECIMAL(18, 2)      NOT NULL,
+
+    CONSTRAINT PK_DETALLE_COMPRAS               PRIMARY KEY (Id),
+    CONSTRAINT FK_DETALLE_COMPRAS_COMPRAS      FOREIGN KEY (IdCompra)   REFERENCES dbo.COMPRAS(Id),
+    CONSTRAINT FK_DETALLE_COMPRAS_PRODUCTOS    FOREIGN KEY (IdProducto) REFERENCES dbo.PRODUCTOS(Id)
+);
+GO
+
+DROP PROCEDURE IF EXISTS dbo.sp_AgregarLineaCompra;
+GO
+
+CREATE PROCEDURE dbo.sp_AgregarLineaCompra
+    @IdCompra       INT,
+    @IdProducto     INT,
+    @IdProveedor    INT,
+    @Cantidad       INT,
+    @PrecioCompra   DECIMAL(18, 2)
+AS
+BEGIN
+    INSERT INTO dbo.DETALLE_COMPRAS (IdCompra, IdProducto, Cantidad, PrecioCompra)
+    VALUES (@IdCompra, @IdProducto, @Cantidad, @PrecioCompra)
+
+    UPDATE dbo.PRODUCTOS
+    SET StockActual = StockActual + @Cantidad,
+        PrecioCompraActual = @PrecioCompra
+    WHERE Id = @IdProducto
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.PRODUCTOS_PROVEEDORES
+                   WHERE IdProducto = @IdProducto AND IdProveedor = @IdProveedor)
+        INSERT INTO dbo.PRODUCTOS_PROVEEDORES (IdProducto, IdProveedor)
+        VALUES (@IdProducto, @IdProveedor)
+END
