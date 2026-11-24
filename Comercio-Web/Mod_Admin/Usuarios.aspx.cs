@@ -13,6 +13,12 @@ namespace Presentacion.Mod_Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.esAdmin(Session["SessionActiva"]))
+            {
+                Session.Add("error", "Se requiere permiso de administrador para acceder a esta pantalla.");
+                Response.Redirect("~/Error.aspx", false);
+            }
+
             if (!IsPostBack)
             {
                 cargarTabla();
@@ -36,7 +42,7 @@ namespace Presentacion.Mod_Admin
                 txtDni.Text = seleccionado.Dni;
                 txtEmail.Text = seleccionado.Email;
                 txtNombreUsuario.Text = seleccionado.NombreUsuario;
-                ddlPerfil.SelectedValue = seleccionado.Perfil;
+                ddlPerfil.SelectedValue = ((int)seleccionado.TipoPerfil).ToString();
 
                 rbActivoSI.Checked = seleccionado.Activo;
                 rbActivoNO.Checked = !seleccionado.Activo;
@@ -54,7 +60,7 @@ namespace Presentacion.Mod_Admin
                 usuario.Email = txtEmail.Text.Trim();
                 usuario.NombreUsuario = txtNombreUsuario.Text.Trim();
                 usuario.Contraseña = txtContrasenia.Text;
-                usuario.Perfil = ddlPerfil.SelectedValue;
+                usuario.TipoPerfil = (TipoPerfil)int.Parse(ddlPerfil.SelectedValue);
                 usuario.Activo = rbActivoSI.Checked;
 
                 UsuarioNegocio negocio = new UsuarioNegocio();

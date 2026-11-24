@@ -46,7 +46,7 @@
                                     <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                                     <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
                                     <asp:BoundField DataField="NombreUsuario" HeaderText="Usuario" />
-                                    <asp:BoundField DataField="Perfil" HeaderText="Perfil" />
+                                    <asp:BoundField DataField="TipoPerfil" HeaderText="Perfil" />
                                     <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
                                 </Columns>
                             </asp:GridView>
@@ -102,9 +102,9 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Perfil</span>
                             <asp:DropDownList ID="ddlPerfil" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione un perfil" Value="" />
-                                <asp:ListItem Text="Administrador" Value="Administrador" />
-                                <asp:ListItem Text="Vendedor" Value="Vendedor" />
+                                <asp:ListItem Text="Sin asignar" Value="0" />
+                                <asp:ListItem Text="Administrador" Value="1" />
+                                <asp:ListItem Text="Vendedor" Value="2" />
                             </asp:DropDownList>
                         </div>
 

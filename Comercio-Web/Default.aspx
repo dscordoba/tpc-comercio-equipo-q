@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="Inicio" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Presentacion._Default" %>
+<%@ Import Namespace="Negocio" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -33,26 +34,28 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Nueva Compra -->
-            <div class="col-12 col-md-6">
-                <div class="card h-100 border-0 shadow-sm bg-dark text-white p-3 p-md-4">
-                    <div class="card-body d-flex flex-column justify-content-between p-0">
-                        <div>
-                            <div class="mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16" aria-hidden="true">
-                                    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
-                                </svg>
+            <%-- Solo visible si es ADMIN --%>
+            <% if (Seguridad.esAdmin(Session["SessionActiva"])) { %>
+                <!-- Nueva Compra -->
+                <div class="col-12 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm bg-dark text-white p-3 p-md-4">
+                        <div class="card-body d-flex flex-column justify-content-between p-0">
+                            <div>
+                                <div class="mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16" aria-hidden="true">
+                                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="card-title fw-bold">Nueva Compra</h3>
+                                <p class="card-text text-white-50">Ingresa stock al inventario y actualiza costos.</p>
                             </div>
-                            <h3 class="card-title fw-bold">Nueva Compra</h3>
-                            <p class="card-text text-white-50">Ingresa stock al inventario y actualiza costos.</p>
-                        </div>
-                        <div class="mt-3 mt-md-4">
-                            <a href="~/Mod_Compras/NuevaCompra.aspx" runat="server" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">Registrar Compra &raquo;</a>
+                            <div class="mt-3 mt-md-4">
+                                <a href="~/Mod_Compras/NuevaCompra.aspx" runat="server" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">Registrar Compra &raquo;</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <% } %>
         </div>
 
         <!-- INFORMACIÓN -->
@@ -72,10 +75,13 @@
                                 Ventas concretadas
                                 <span class="badge bg-success rounded-pill">12</span>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                Compras ingresadas
-                                <span class="badge bg-dark rounded-pill">3</span>
-                            </li>
+                            <%-- Solo visible si es ADMIN --%>
+                            <% if (Seguridad.esAdmin(Session["SessionActiva"])) { %>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Compras ingresadas
+                                    <span class="badge bg-dark rounded-pill">3</span>
+                                </li>
+                            <% } %>
                         </ul>
                     </div>
                 </div>
@@ -100,23 +106,25 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Accesos de Administración -->
-            <div class="col-12 col-md-4">
-                <div class="card h-100 border-0 shadow-sm p-3">
-                    <div class="card-body p-0">
-                        <h5 class="fw-bold text-secondary mb-3 d-flex align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear-fill me-2 text-secondary" viewBox="0 0 16 16" aria-hidden="true">
-                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.858 2.929 2.929 0 0 1 0 5.858z"/>
-                            </svg>
-                            Configuración Rápida
-                        </h5>
-                        <div class="d-grid gap-2">
-                            <a href="~/Mod_Admin/Usuarios.aspx" runat="server" class="btn btn-outline-secondary btn-sm text-start">Gestión de Usuarios</a>
+            <%-- Solo visible si es ADMIN --%>
+            <% if (Seguridad.esAdmin(Session["SessionActiva"])) { %>
+                <!-- Accesos de Administración -->
+                <div class="col-12 col-md-4">
+                    <div class="card h-100 border-0 shadow-sm p-3">
+                        <div class="card-body p-0">
+                            <h5 class="fw-bold text-secondary mb-3 d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear-fill me-2 text-secondary" viewBox="0 0 16 16" aria-hidden="true">
+                                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.858 2.929 2.929 0 0 1 0 5.858z"/>
+                                </svg>
+                                Configuración Rápida
+                            </h5>
+                            <div class="d-grid gap-2">
+                                <a href="~/Mod_Admin/Usuarios.aspx" runat="server" class="btn btn-outline-secondary btn-sm text-start">Gestión de Usuarios</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <% } %>
         </div>
     </main>
 

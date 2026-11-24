@@ -131,7 +131,7 @@
 
                         <!-- Botones de Acción -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="Button1" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
+                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
                             <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
                             <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" CausesValidation="false" OnClick="btnCancelar_Click" />
                         </div>
