@@ -1,5 +1,15 @@
 ﻿<%@ Page Title="Marcas" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Marcas.aspx.cs" Inherits="Presentacion.Mod_Inventario.Marcas" %>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script>
+        function validar() {
+            const valDescripcion = validarRequerido(document.getElementById("txtDescripcion"));
+
+            return valDescripcion;
+        }
+    </script>
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- todo el contenido de la pagina -->
@@ -67,7 +77,7 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Descripción</span>
-                            <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtDescripcion" ClientIDMode="Static" runat="server" CssClass="form-control" MaxLength="100"></asp:TextBox>
                         </div>
 
                         <div class="input-group mb-3">
@@ -91,10 +101,11 @@
 
                             </div>
                         </div>
-
+                        <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
+                        
                         <!-- botones -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClick="btnGrabar_Click" />
+                            <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary px-3" OnClientClick="return validar();" OnClick="btnGrabar_Click" />
                             <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
                             <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click" />
                         </div>

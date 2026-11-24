@@ -61,6 +61,16 @@ namespace Presentacion.Mod_Inventario
         {
             try
             {
+
+                lblError.Visible = false;
+
+                if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
+                {
+                    lblError.Text = "Ingrese una descripcion";
+                    lblError.Visible = true;
+                    return;
+                }
+
                 Marca marca = new Marca();
                 marca.Descripcion = txtDescripcion.Text.Trim();
                 
@@ -84,7 +94,8 @@ namespace Presentacion.Mod_Inventario
             }
             catch (Exception ex)
             {
-                throw ex;
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
             }
         }
 
@@ -140,6 +151,7 @@ namespace Presentacion.Mod_Inventario
             btnInactivar.Visible = false;
             divRbActivoSi.Visible = true;
             divRbActivoNo.Visible = false;
+            lblError.Visible = false;
         }
 
     }
