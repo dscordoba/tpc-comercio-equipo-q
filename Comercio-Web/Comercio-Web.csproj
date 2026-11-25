@@ -126,6 +126,7 @@
     <Content Include="Mod_Inventario\Marcas.aspx" />
     <Content Include="Mod_Inventario\Categorias.aspx" />
     <Content Include="Mod_Inventario\Productos.aspx" />
+    <Content Include="Mod_Ventas\Factura.aspx" />
     <Content Include="Mod_Ventas\Informes.aspx" />
     <Content Include="Mod_Ventas\NuevaVenta.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -267,6 +268,13 @@
     </Compile>
     <Compile Include="Mod_Inventario\Productos.aspx.designer.cs">
       <DependentUpon>Productos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mod_Ventas\Factura.aspx.cs">
+      <DependentUpon>Factura.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mod_Ventas\Factura.aspx.designer.cs">
+      <DependentUpon>Factura.aspx</DependentUpon>
     </Compile>
     <Compile Include="Mod_Ventas\Informes.aspx.cs">
       <DependentUpon>Informes.aspx</DependentUpon>

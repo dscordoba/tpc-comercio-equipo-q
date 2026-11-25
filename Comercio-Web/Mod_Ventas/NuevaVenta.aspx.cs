@@ -267,10 +267,14 @@ namespace Presentacion.Mod_Ventas
                         item.PrecioUnitario
                     );
                 }
+                nuevaVenta.LineasVenta = detalle;
+                Session["facturaVenta"] = nuevaVenta;
+                Session["facturaCliente"] = ddlCliente.SelectedItem.Text;
                 limpiarFormulario();
 
                 lblMensajeExito.Text = "¡Venta realizada con éxito! Nro. de factura: " + nuevaVenta.NumeroFactura;
                 pnlVentaExitosa.Visible = true;
+                Response.Redirect("~/Mod_Ventas/Factura.aspx", false);
 
             }
             catch ( Exception ex)
