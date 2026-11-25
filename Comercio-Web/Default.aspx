@@ -73,13 +73,13 @@
                         <ul class="list-group list-group-flush small">
                             <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                 Ventas concretadas
-                                <span class="badge bg-success rounded-pill">12</span>
+                                <asp:Label ID="lblVentasHoy" runat="server" CssClass="badge bg-success rounded-pill" Text="0"></asp:Label>
                             </li>
                             <%-- Solo visible si es ADMIN --%>
                             <% if (Seguridad.esAdmin(Session["SessionActiva"])) { %>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     Compras ingresadas
-                                    <span class="badge bg-dark rounded-pill">3</span>
+                                    <asp:Label ID="lblComprasHoy" runat="server" CssClass="badge bg-dark rounded-pill" Text="0"></asp:Label>
                                 </li>
                             <% } %>
                         </ul>
@@ -89,23 +89,35 @@
 
             <!-- Alertas de Inventario -->
             <div class="col-12 col-md-4">
-                <div class="card h-100 border-0 shadow-sm p-3">
-                    <div class="card-body p-0 d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="fw-bold text-secondary mb-3 d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2 text-warning" viewBox="0 0 16 16" aria-hidden="true">
-                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                                </svg>
-                                Alertas de Stock
-                            </h5>
-                            <p class="card-text text-muted small">Hay productos que alcanzaron su stock mínimo de reposición.</p>
-                        </div>
-                        <div class="mt-2">
-                            <a href="~/Mod_Inventario/Productos.aspx" runat="server" class="btn btn-link text-danger p-0 fw-bold small text-decoration-none">Ver productos faltantes &raquo;</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="card h-100 border-0 shadow-sm p-3">
+        <div class="card-body p-0">
+            <h5 class="fw-bold text-secondary mb-3 d-flex align-items-center">
+                <svg xmlns="http://w3.org" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2 text-warning" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                </svg>
+                Alertas de Stock
+            </h5>
+
+            <asp:Label ID="lblSinAlertas" runat="server" CssClass="text-muted small" Text="Todos los productos tienen stock suficiente." Visible="false"></asp:Label>
+
+            <ul class="list-group list-group-flush small">
+                <asp:Repeater ID="repStockBajo" runat="server">
+                    <ItemTemplate>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span>
+                                <strong><%# Eval("Nombre") %></strong>
+                                <small class="text-muted d-block">Mínimo: <%# Eval("StockMinimo") %></small>
+                            </span>
+                            <span class="badge bg-danger rounded-pill">
+                                Stock: <%# Eval("StockActual") %>
+                            </span>
+                        </li>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </ul>
+        </div>
+    </div>
+</div>
             <%-- Solo visible si es ADMIN --%>
             <% if (Seguridad.esAdmin(Session["SessionActiva"])) { %>
                 <!-- Accesos de Administración -->

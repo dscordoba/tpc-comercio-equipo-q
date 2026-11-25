@@ -291,5 +291,39 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Producto> listarStockBajo()
+        {
+            List<Producto> lista = new List<Producto>();
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("SELECT Id, CodigoProducto, Nombre, StockActual, StockMinimo FROM PRODUCTOS WHERE Activo = 1 AND StockActual <= StockMinimo ORDER BY StockActual ASC");
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Producto aux = new Producto();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.CodigoProducto = datos.Lector["CodigoProducto"].ToString();
+                    aux.Nombre = datos.Lector["Nombre"].ToString();
+                    aux.StockActual = (int)datos.Lector["StockActual"];
+                    aux.StockMinimo = (int)datos.Lector["StockMinimo"];
+
+                    lista.Add(aux);
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

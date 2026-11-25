@@ -91,5 +91,28 @@ namespace Negocio
             }
         }
 
+        public int contarVentasHoy()
+        {
+            ConexionDatos datos = new ConexionDatos();
+            try
+            {
+                datos.setearConsulta("SELECT COUNT(*) FROM VENTAS WHERE CAST(Fecha AS DATE) = CAST(GETDATE() AS DATE)");
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0];
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
     }
 }
