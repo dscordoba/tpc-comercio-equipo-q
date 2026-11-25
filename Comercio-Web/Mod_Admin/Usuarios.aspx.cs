@@ -21,7 +21,12 @@ namespace Presentacion.Mod_Admin
 
             if (!IsPostBack)
             {
+                btnInactivar.Visible = false;
+                btnInactivar.Enabled = false;
+                divRbActivoNo.Visible = false;
+                lblError.Visible = false;
                 cargarTabla();
+                cargarPerfiles(true); 
             }
         }
 
@@ -35,17 +40,42 @@ namespace Presentacion.Mod_Admin
 
             if (seleccionado != null)
             {
-                hfUsuarioId.Value = seleccionado.Id.ToString();
+                lblError.Visible = false;
+
+                Session.Add("usuarioSeleccionado", seleccionado);
+
                 txtId.Text = seleccionado.Id.ToString();
                 txtNombre.Text = seleccionado.Nombre;
                 txtApellido.Text = seleccionado.Apellido;
                 txtDni.Text = seleccionado.Dni;
                 txtEmail.Text = seleccionado.Email;
                 txtNombreUsuario.Text = seleccionado.NombreUsuario;
-                ddlPerfil.SelectedValue = ((int)seleccionado.TipoPerfil).ToString();
+
+                // Carga perfil "Sin asignar" solo si lo tiene 
+                int perfilId = (int)seleccionado.TipoPerfil;
+                cargarPerfiles(perfilId == 0);
+                ddlPerfil.SelectedValue = perfilId.ToString();
 
                 rbActivoSI.Checked = seleccionado.Activo;
                 rbActivoNO.Checked = !seleccionado.Activo;
+
+                btnInactivar.Visible = true;
+                btnInactivar.Enabled = true;
+
+                if (!seleccionado.Activo)
+                {
+                    btnInactivar.Text = "Reactivar";
+                    btnInactivar.CssClass = "btn btn-success";
+                    divRbActivoSi.Visible = false;
+                    divRbActivoNo.Visible = true;
+                }
+                else
+                {
+                    btnInactivar.Text = "Inactivar";
+                    btnInactivar.CssClass = "btn btn-danger";
+                    divRbActivoNo.Visible = false;
+                    divRbActivoSi.Visible = true;
+                }
             }
         }
 
@@ -53,62 +83,66 @@ namespace Presentacion.Mod_Admin
         {
             try
             {
+                lblError.Visible = false;
+
+                if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                    string.IsNullOrWhiteSpace(txtApellido.Text) ||
+                    !Validaciones.SoloNumeros(txtDni.Text.Trim()) ||
+                    txtDni.Text.Trim().Length < 7 ||
+                    !Validaciones.EmailValido(txtEmail.Text) ||
+                    string.IsNullOrWhiteSpace(txtNombreUsuario.Text) ||
+                    ddlPerfil.SelectedValue == "0" ||
+                    (Session["usuarioSeleccionado"] == null && string.IsNullOrWhiteSpace(txtContrasenia.Text)))
+                {
+                    lblError.Text = "Verifique que los campos obligatorios sean válidos.";
+                    lblError.Visible = true;
+                    return;
+                }
+
                 Usuario usuario = new Usuario();
                 usuario.Nombre = txtNombre.Text.Trim();
                 usuario.Apellido = txtApellido.Text.Trim();
                 usuario.Dni = txtDni.Text.Trim();
                 usuario.Email = txtEmail.Text.Trim();
                 usuario.NombreUsuario = txtNombreUsuario.Text.Trim();
-                usuario.Contraseña = txtContrasenia.Text;
                 usuario.TipoPerfil = (TipoPerfil)int.Parse(ddlPerfil.SelectedValue);
-                usuario.Activo = rbActivoSI.Checked;
 
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                // si no hay id es un usuario nuevo, si hay id se modifica
-                if (string.IsNullOrEmpty(hfUsuarioId.Value))
+                // Valido si hay un usuario seleccionado en Sesión
+                if (Session["usuarioSeleccionado"] == null)
                 {
+                    usuario.Contraseña = txtContrasenia.Text.Trim();
                     negocio.agregar(usuario);
                 }
                 else
                 {
-                    usuario.Id = int.Parse(hfUsuarioId.Value);
-
-                    // el campo contraseña no muestra la clave guardada, si queda vacio se deja la que ya tenia
-                    if (usuario.Contraseña == "")
-                    {
-                        usuario.Contraseña = negocio.listar().Find(x => x.Id == usuario.Id).Contraseña;
-                    }
-
+                    Usuario seleccionado = (Usuario)Session["usuarioSeleccionado"];
+                    usuario.Id = seleccionado.Id;
+                    usuario.Contraseña = string.IsNullOrWhiteSpace(txtContrasenia.Text) ? seleccionado.Contraseña : txtContrasenia.Text.Trim();
                     negocio.modificar(usuario);
                 }
 
+                Session.Remove("usuarioSeleccionado");
                 cargarTabla();
                 limpiarFormulario();
             }
-            catch (Exception ex)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                throw ex;
-            }
-        }
+                if (ex.Number == 2627 || ex.Number == 2601)
+                    lblError.Text = "Ya existe un usuario registrado con ese DNI, correo electrónico o nombre de usuario.";
+                else
+                    lblError.Text = "Error al guardar el usuario en la base de datos.";
 
-        protected void btnEliminar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int idUsuario = int.Parse(hfUsuarioId.Value);
-                UsuarioNegocio negocio = new UsuarioNegocio();
-
-                negocio.eliminar(idUsuario);
-
-                cargarTabla();
-                limpiarFormulario();
+                lblError.Visible = true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
             }
         }
+
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -119,14 +153,49 @@ namespace Presentacion.Mod_Admin
         private void cargarTabla()
         {
             UsuarioNegocio negocio = new UsuarioNegocio();
-            dgvUsuarios.DataSource = negocio.listar();
+            List<Usuario> lista = negocio.listar();
+
+            // Filtro por perfil
+            int perfilSeleccionado = int.Parse(ddlFiltroPerfil.SelectedValue);
+            if (perfilSeleccionado != -1)
+            {
+                lista = lista.Where(x => (int)x.TipoPerfil == perfilSeleccionado).ToList();
+            }
+
+            // Filtro por estado 
+            int estadoSeleccionado = int.Parse(ddlFiltroEstado.SelectedValue);
+            if (estadoSeleccionado != -1)
+            {
+                bool activo = estadoSeleccionado == 1;
+                lista = lista.Where(x => x.Activo == activo).ToList();
+            }
+
+            dgvUsuarios.DataSource = lista;
             dgvUsuarios.DataBind();
+        }
+
+        protected void Filtros_Changed(object sender, EventArgs e)
+        {
+            cargarTabla();
+        }
+
+        protected void btnPendientes_Click(object sender, EventArgs e)
+        {
+            ddlFiltroPerfil.SelectedValue = "0"; // Sin asignar
+            ddlFiltroEstado.SelectedValue = "1"; // Activos
+            cargarTabla();
+        }
+
+        protected void btnLimpiarFiltros_Click(object sender, EventArgs e)
+        {
+            ddlFiltroPerfil.SelectedValue = "-1";
+            ddlFiltroEstado.SelectedValue = "-1";
+            cargarTabla();
         }
 
         // deja el formulario vacio
         private void limpiarFormulario()
         {
-            hfUsuarioId.Value = string.Empty;
             txtId.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtApellido.Text = string.Empty;
@@ -134,13 +203,59 @@ namespace Presentacion.Mod_Admin
             txtEmail.Text = string.Empty;
             txtNombreUsuario.Text = string.Empty;
             txtContrasenia.Text = string.Empty;
+
+            cargarPerfiles(true);
             ddlPerfil.SelectedIndex = 0;
 
             rbActivoSI.Checked = true;
             rbActivoNO.Checked = false;
 
             dgvUsuarios.SelectedIndex = -1;
+
+            btnInactivar.Visible = false;
+            btnInactivar.Enabled = false;
+
+            divRbActivoSi.Visible = true;
+            divRbActivoNo.Visible = false;
+
+            lblError.Visible = false;
         }
 
+        // Método para armar el desplegable dinámicamente
+        private void cargarPerfiles(bool incluirSinAsignar)
+        {
+            ddlPerfil.Items.Clear();
+
+            if (incluirSinAsignar)
+            {
+                ddlPerfil.Items.Add(new ListItem("Sin asignar", "0"));
+            }
+
+            ddlPerfil.Items.Add(new ListItem("Administrador", "1"));
+            ddlPerfil.Items.Add(new ListItem("Vendedor", "2"));
+        }
+
+        protected void btnInactivar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Session["usuarioSeleccionado"] != null)
+                {
+                    Usuario seleccionado = (Usuario)Session["usuarioSeleccionado"];
+                    UsuarioNegocio negocio = new UsuarioNegocio();
+
+                    negocio.eliminarLogico(seleccionado.Id, !seleccionado.Activo);
+
+                    Session.Remove("usuarioSeleccionado");
+                    cargarTabla();
+                    limpiarFormulario();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
     }
 }

@@ -177,15 +177,16 @@ namespace Negocio
             }
         }
 
-        // borra el usuario de la base
-        public void eliminar(int id)
+        /* Eliminación lógica (Inactivar/Reactivar) */
+        public void eliminarLogico(int id, bool activo = false)
         {
             ConexionDatos datos = new ConexionDatos();
 
             try
             {
-                datos.setearConsulta("DELETE FROM USUARIOS WHERE Id = @id");
+                datos.setearConsulta("UPDATE USUARIOS SET Activo = @activo WHERE Id = @id");
                 datos.setearParametro("@id", id);
+                datos.setearParametro("@activo", activo);
 
                 datos.ejecutarAccion();
             }
