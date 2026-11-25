@@ -77,7 +77,7 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("UPDATE CATEGORIA SET Activo = @ activo WHERE Id = @id");
+                datos.setearConsulta("UPDATE CATEGORIAS SET Activo = @activo WHERE Id = @id");
                 datos.setearParametro("@id", id);
                 datos.setearParametro("@activo", activo);
 

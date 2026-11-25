@@ -14,7 +14,7 @@ namespace Presentacion.Inventario
         private void cargarGrilla()
         {
             CategoriaNegocio negocio = new CategoriaNegocio();
-            dgvCategorias.DataSource = negocio.listarConSP();
+            dgvCategorias.DataSource = negocio.listar();
             dgvCategorias.DataBind();
         }
         protected void Page_Load(object sender, EventArgs e)
