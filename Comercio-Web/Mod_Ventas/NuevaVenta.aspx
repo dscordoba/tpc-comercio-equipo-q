@@ -133,6 +133,11 @@ function validarLineaVenta() {
                                                 <%# (Convert.ToInt32(Eval("Cantidad")) * Convert.ToDecimal(Eval("PrecioUnitario"))).ToString("C") %>
                                             </ItemTemplate>
                                         </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Quitar">
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkIncluir" runat="server" Checked="true" AutoPostBack="true" OnCheckedChanged="chkIncluir_CheckedChanged" ToolTip="Desmarcar para quitar este producto de la venta" />
+                                            </ItemTemplate> 
+                                        </asp:TemplateField>
                                     </Columns>
                                 </asp:GridView>
                             </div>

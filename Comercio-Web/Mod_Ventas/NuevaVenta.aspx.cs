@@ -4,6 +4,7 @@ using Presentacion.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -311,6 +312,52 @@ namespace Presentacion.Mod_Ventas
 
             VentaNegocio negocio = new VentaNegocio();
             txtNumeroFactura.Text = negocio.obtenerProximoNumeroFactura();
+        }
+
+        protected void chkIncluir_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                lblError.Visible = false;
+
+                CheckBox chk = (CheckBox)sender;
+                if(!chk.Checked)
+                {
+                    GridViewRow fila = (GridViewRow)chk.NamingContainer;
+                    int indice = fila.RowIndex;
+
+                    List<DetalleVenta> detalle = Session["DetalleVenta"] as List<DetalleVenta>;
+                    if(detalle != null && indice >= 0 && indice < detalle.Count)
+                    {
+                        detalle.RemoveAt(indice);
+                        Session["DetalleVenta"] = detalle;
+
+                        cargarGrilla();
+                        actualizarTotalVenta(detalle);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
+            }
+        }
+
+        private void actualizarTotalVenta(List<DetalleVenta> detalle)
+        {
+            decimal totalVenta = 0;
+
+            if(detalle != null)
+            {
+                foreach(DetalleVenta item in detalle)
+                {
+                    decimal subtotalLinea = item.Cantidad * item.PrecioUnitario;
+                    totalVenta += subtotalLinea;
+                }
+            }
+
+            txtTotalFinal.Text = totalVenta.ToString("0.00");
         }
     }
 }

@@ -84,6 +84,17 @@ GO
 INSERT INTO CATEGORIAS (Descripcion) VALUES ('Electrodomésticos'), ('Tecnología');
 GO
 
+CREATE PROCEDURE dbo.ListarCategorias
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id, Descripcion, Activo
+    FROM dbo.CATEGORIAS
+    WHERE Activo = 1
+    ORDER BY Descripcion;
+END
+GO
+
 -- CREAR TABLA PROVEEDORES
 CREATE TABLE dbo.PROVEEDORES (
     Id      INT IDENTITY(1, 1)      NOT NULL,
@@ -358,6 +369,7 @@ BEGIN
         INSERT INTO dbo.PRODUCTOS_PROVEEDORES (IdProducto, IdProveedor)
         VALUES (@IdProducto, @IdProveedor)
 END
+
 GO
 -- STORE PROCEDURE PARA INSERTAR UNA COMPRA
 CREATE PROCEDURE dbo.sp_InsertarCompra

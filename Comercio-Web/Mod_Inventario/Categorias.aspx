@@ -38,14 +38,14 @@ function validarCategoria() {
                                 <Columns>
                                     <asp:TemplateField HeaderText="Id" >
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="lnId" runat="server"
+                                            <asp:LinkButton ID="lnkId" runat="server"
                                                 Text='<%# Eval("Id")%>'
                                                 CommandName="Select"
                                                 CssClass="fw-bold text-decoration-none" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
-                                    <asp:BoundField DataField="Activo" HeaderText="Activo" />
+                                    <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
                                 </Columns>
                             </asp:GridView>
                         </div>
