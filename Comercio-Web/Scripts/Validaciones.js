@@ -46,6 +46,11 @@ function soloNumeros(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
 }
 
+// Bloquear símbolos mientras escribe (solo letras y números)
+function soloAlfanumerico(input) {
+    input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+}
+
 // Bloquear letras, limitar enteros y permitir hasta 2 decimales
 function soloDecimales(input, maxEnteros = 10) {
     let valor = input.value.replace(/,/g, '.').replace(/[^0-9.]/g, '');

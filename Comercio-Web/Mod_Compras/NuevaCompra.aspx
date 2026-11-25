@@ -1,5 +1,25 @@
 ﻿<%@ Page Title="Nueva Compra" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NuevaCompra.aspx.cs" Inherits="Presentacion.Mod_Compras.NuevaCompra" %>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script>
+function validarLinea() {
+    const valProducto = validarRequerido(document.getElementById("ddlProducto"));
+    const valCantidad = validarRequerido(document.getElementById("txtCantidad"));
+    const valPrecio = validarRequerido(document.getElementById("txtPrecioCompra"));
+
+    return valProducto && valCantidad && valPrecio;
+}
+
+function validarCompra() {
+    const valProveedor = validarRequerido(document.getElementById("ddlProveedor"));
+    const valFecha = validarRequerido(document.getElementById("txtFecha"));
+    const valFactura = validarRequerido(document.getElementById("txtNumeroFactura"));
+
+    return valProveedor && valFecha && valFactura;
+}
+</script>
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- todo el contenido de la pagina -->
@@ -29,19 +49,19 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Proveedor</span>
-                            <asp:DropDownList ID="ddlProveedor" runat="server" CssClass="form-select" AppendDataBoundItems="true">
+                            <asp:DropDownList ID="ddlProveedor" ClientIDMode="Static" runat="server" CssClass="form-select" AppendDataBoundItems="true">
                                 <asp:ListItem Text="Seleccione un proveedor" Value="" />
                             </asp:DropDownList>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Fecha</span>
-                            <asp:TextBox ID="txtFecha" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                            <asp:TextBox ID="txtFecha" ClientIDMode="Static" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Nro. Factura</span>
-                            <asp:TextBox ID="txtNumeroFactura" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtNumeroFactura" ClientIDMode="Static" runat="server" CssClass="form-control" MaxLength="8" oninput="soloAlfanumerico(this)"></asp:TextBox>
                         </div>
 
                     </div>
@@ -54,24 +74,24 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Producto</span>
-                            <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-select" AppendDataBoundItems="true">
+                            <asp:DropDownList ID="ddlProducto"  ClientIDMode="Static" runat="server" CssClass="form-select" AppendDataBoundItems="true">
                                 <asp:ListItem Text="Seleccione un producto" Value="" />
                             </asp:DropDownList>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Cantidad</span>
-                            <asp:TextBox ID="txtCantidad" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                            <asp:TextBox ID="txtCantidad" ClientIDMode="Static" runat="server" CssClass="form-control" TextMode="Number" oninput="soloNumeros(this); limitarCaracteres(this, 6);"></asp:TextBox>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Precio</span>
-                            <asp:TextBox ID="txtPrecioCompra" runat="server" CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtPrecioCompra" ClientIDMode="Static" runat="server" CssClass="form-control"  oninput="soloDecimales(this, 8);"></asp:TextBox>
                         </div>
                         <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold d-block mb-2" Visible="false"></asp:Label>
 
                         <div class="d-flex justify-content-center mt-4">
-                           <asp:Button ID="btnAgregarLinea" runat="server" Text="Agregar" CssClass="btn btn-primary px-3" OnClick="btnAgregarLinea_Click" />
+                           <asp:Button ID="btnAgregarLinea" runat="server" Text="Agregar" CssClass="btn btn-primary px-3" OnClientClick="return validarLinea();"  OnClick="btnAgregarLinea_Click" />
                         </div>
 
                     </div>
@@ -113,10 +133,11 @@
                             <asp:TextBox ID="txtTotal" runat="server" CssClass="form-control" ReadOnly="true" Disabled="true"></asp:TextBox>
                         </div>
 
+                        <asp:Label ID="lblExito" runat="server" CssClass="text-success fw-bold d-block mt-3 text-center" Visible="false"></asp:Label>
                         <!-- botones -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
-                            <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar compra" CssClass="btn btn-primary px-3" />
-                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" />
+                            <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar compra" CssClass="btn btn-primary px-3" OnClientClick="return validarCompra();" OnClick="btnConfirmar_Click" />
+                            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" OnClick="btnCancelar_Click" />
                         </div>
 
                     </div>

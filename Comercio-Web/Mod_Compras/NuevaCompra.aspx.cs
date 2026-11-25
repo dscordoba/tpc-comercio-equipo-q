@@ -116,5 +116,112 @@ namespace Presentacion.Mod_Compras
                 cargarLineas();
             }
         }
+
+        protected void btnConfirmar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lblError.Visible = false;
+                lblExito.Visible = false;
+
+                if (ddlProveedor.SelectedValue == "")
+                {
+                    lblError.Text = "Seleccione un proveedor";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtFecha.Text))
+                {
+                    lblError.Text = "Ingrese la fecha de la compra";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                DateTime fecha = DateTime.Parse(txtFecha.Text);
+                if (fecha > DateTime.Today)
+                {
+                    lblError.Text = "La fecha no puede ser futura";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtNumeroFactura.Text))
+                {
+                    lblError.Text = "Ingrese el número de factura";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (!Validaciones.SoloAlfanumerico(txtNumeroFactura.Text.Trim()) || txtNumeroFactura.Text.Trim().Length > 8)
+                {
+                    lblError.Text = "El número de factura debe ser alfanumérico, de hasta 8 caracteres";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                List<DetalleCompra> lineas = (List<DetalleCompra>)Session["lineasCompra"];
+                if (lineas == null || lineas.Count == 0)
+                {
+                    lblError.Text = "Agregue al menos un producto";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                int idProveedor = int.Parse(ddlProveedor.SelectedValue);
+                string factura = txtNumeroFactura.Text.Trim();
+
+                CompraNegocio negocio = new CompraNegocio();
+
+                if (negocio.ExisteFactura(idProveedor, factura))
+                {
+                    lblError.Text = "Ya existe una compra con ese número de factura para este proveedor";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                Compra nueva = new Compra();
+                nueva.NumeroFactura = factura;
+                nueva.Fecha = fecha;
+                nueva.ProveedorAsociado = new Proveedor();
+                nueva.ProveedorAsociado.Id = idProveedor;
+
+                int idCompra = negocio.agregar(nueva);
+
+                foreach (DetalleCompra linea in lineas)
+                {
+                    negocio.agregarLinea(idCompra, idProveedor, linea.ProductoAsociado.Id, linea.Cantidad, linea.PrecioCompra);
+                }
+
+                limpiarFormulario();
+                lblExito.Text = "Compra registrada con éxito";
+                lblExito.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message;
+                lblError.Visible = true;
+            }
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+            limpiarFormulario();
+        }
+
+        private void limpiarFormulario()
+        {
+            Session.Remove("lineasCompra");
+            cargarLineas();
+
+            ddlProveedor.SelectedIndex = 0;
+            ddlProducto.SelectedIndex = 0;
+            txtFecha.Text = "";
+            txtNumeroFactura.Text = "";
+            txtCantidad.Text = "";
+            txtPrecioCompra.Text = "";
+            lblError.Visible = false;
+            lblExito.Visible = false;
+        }
     }
 }

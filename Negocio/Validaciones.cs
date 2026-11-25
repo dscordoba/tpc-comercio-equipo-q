@@ -23,6 +23,17 @@ namespace Negocio
             return true;
         }
 
+        // Valida que el campo solo tenga letras y números
+        public static bool SoloAlfanumerico(string cadena)
+        {
+            if (string.IsNullOrEmpty(cadena))
+                return false;
+
+            return Regex.IsMatch(cadena, "^[a-zA-Z0-9]+$");
+        }
+
+
+
         // Valida el formato de mail
         public static bool EmailValido(string email)
         {
