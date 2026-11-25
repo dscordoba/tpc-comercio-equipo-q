@@ -106,5 +106,15 @@ namespace Presentacion.Mod_Compras
                 lblError.Visible = true;
             }
         }
+        protected void dgvLineasCompra_BorrarLinea(object sender, GridViewDeleteEventArgs e)
+        {
+            List<DetalleCompra> lineas = (List<DetalleCompra>)Session["lineasCompra"];
+
+            if (lineas != null)
+            {
+                lineas.RemoveAt(e.RowIndex);
+                cargarLineas();
+            }
+        }
     }
 }

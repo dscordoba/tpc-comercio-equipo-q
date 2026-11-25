@@ -88,6 +88,7 @@
 
                         <div class="table-responsive">
                             <asp:GridView ID="dgvLineasCompra" runat="server"
+                                OnRowDeleting="dgvLineasCompra_BorrarLinea"
                                 AutoGenerateColumns="False"
                                 ShowHeaderWhenEmpty="True"
                                 EmptyDataText="Todavía no hay productos cargados"
@@ -102,6 +103,7 @@
                                     <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
                                     <asp:BoundField DataField="PrecioCompra" HeaderText="Precio" />
                                     <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" />
+                                    <asp:CommandField ShowDeleteButton="true" DeleteText="Quitar" />
                                 </Columns>
                             </asp:GridView>
                         </div>
