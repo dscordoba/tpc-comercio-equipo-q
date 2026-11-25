@@ -13,16 +13,21 @@ namespace Presentacion.Mod_Compras
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.esAdmin(Session["SessionActiva"]))
+            {
+                Session.Add("error", "Se requiere permiso de administrador para acceder a esta pantalla.");
+                Response.Redirect("~/Error.aspx", false);
+            }
             if (!IsPostBack)
             {
                 ProveedorNegocio proveedorNegocio = new ProveedorNegocio();
-                ddlProveedor.DataSource = proveedorNegocio.listar();
+                ddlProveedor.DataSource = proveedorNegocio.listar().FindAll(x => x.Activo);
                 ddlProveedor.DataValueField = "Id";
                 ddlProveedor.DataTextField = "RazonSocial";
                 ddlProveedor.DataBind();
 
                 ProductoNegocio productoNegocio = new ProductoNegocio();
-                ddlProducto.DataSource = productoNegocio.listarConSP();
+                ddlProducto.DataSource = productoNegocio.listarConSP().FindAll(x => x.Activo);
                 ddlProducto.DataValueField = "Id";
                 ddlProducto.DataTextField = "Nombre";
                 ddlProducto.DataBind();
