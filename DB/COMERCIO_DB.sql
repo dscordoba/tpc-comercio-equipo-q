@@ -350,7 +350,7 @@ BEGIN
 
     UPDATE dbo.PRODUCTOS
     SET StockActual = StockActual + @Cantidad,
-        PrecioCompraActual = @PrecioCompra
+        PrecioCompraActual = (SELECT MAX(PrecioCompra) FROM dbo.DETALLE_COMPRAS WHERE IdCompra = @IdCompra AND IdProducto = @IdProducto)
     WHERE Id = @IdProducto
 
     IF NOT EXISTS (SELECT 1 FROM dbo.PRODUCTOS_PROVEEDORES
@@ -358,3 +358,17 @@ BEGIN
         INSERT INTO dbo.PRODUCTOS_PROVEEDORES (IdProducto, IdProveedor)
         VALUES (@IdProducto, @IdProveedor)
 END
+GO
+-- STORE PROCEDURE PARA INSERTAR UNA COMPRA
+CREATE PROCEDURE dbo.sp_InsertarCompra
+    @NumeroFactura  VARCHAR(50),
+    @Fecha          DATETIME,
+    @IdProveedor    INT
+AS
+BEGIN
+    INSERT INTO dbo.COMPRAS (NumeroFactura, Fecha, IdProveedor)
+    VALUES (@NumeroFactura, @Fecha, @IdProveedor);
+
+    SELECT MAX(Id) AS IdCompra FROM dbo.COMPRAS;
+END
+GO
