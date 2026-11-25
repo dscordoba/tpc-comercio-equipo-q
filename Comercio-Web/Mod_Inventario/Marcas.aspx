@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script>
-        function validar() {
+        function validarMarca() {
             const valDescripcion = validarRequerido(document.getElementById("txtDescripcion"));
 
             return valDescripcion;

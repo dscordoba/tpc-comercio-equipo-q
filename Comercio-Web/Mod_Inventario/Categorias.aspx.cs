@@ -19,6 +19,11 @@ namespace Presentacion.Inventario
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.esAdmin(Session["SessionActiva"]))
+            {
+                Session.Add("error", "Se requiere permiso de administrador para acceder a esta pantalla");
+                Response.Redirect("~/Error.aspx", false);
+            }
             if (!IsPostBack)
             {
                 btnInactivar.Visible = false;
