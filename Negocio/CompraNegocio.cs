@@ -85,6 +85,70 @@ namespace Negocio
             }
         }
 
+
+        public List<Compra> listar(int idProveedor, DateTime desde, DateTime hasta)
+        {
+            List<Compra> lista = new List<Compra>();
+            ConexionDatos datos = new ConexionDatos();
+
+            try
+            {
+                datos.setearConsulta("SELECT C.Id, C.Fecha, C.NumeroFactura, C.IdProveedor, P.RazonSocial, D.IdProducto, PR.Nombre, D.Cantidad, D.PrecioCompra " +
+                    "FROM COMPRAS C " +
+                    "INNER JOIN PROVEEDORES P ON P.Id = C.IdProveedor " +
+                    "INNER JOIN DETALLE_COMPRAS D ON D.IdCompra = C.Id " +
+                    "INNER JOIN PRODUCTOS PR ON PR.Id = D.IdProducto " +
+                    "WHERE (@idProveedor = 0 OR C.IdProveedor = @idProveedor) " +
+                    "AND C.Fecha >= @desde AND C.Fecha < DATEADD(DAY, 1, @hasta) " +
+                    "ORDER BY C.Fecha DESC, C.Id DESC, D.Id");
+                datos.setearParametro("@idProveedor", idProveedor);
+                datos.setearParametro("@desde", desde);
+                datos.setearParametro("@hasta", hasta);
+                datos.ejecutarLectura();
+
+                int ultimoId = 0;
+                Compra compra = null;
+
+                while (datos.Lector.Read())
+                {
+                    int idCompra = (int)datos.Lector["Id"];
+
+                    // si cambió la compra, creo una nueva
+                    if (idCompra != ultimoId)
+                    {
+                        compra = new Compra();
+                        compra.Id = idCompra;
+                        compra.Fecha = (DateTime)datos.Lector["Fecha"];
+                        compra.NumeroFactura = (string)datos.Lector["NumeroFactura"];
+                        compra.ProveedorAsociado = new Proveedor();
+                        compra.ProveedorAsociado.Id = (int)datos.Lector["IdProveedor"];
+                        compra.ProveedorAsociado.RazonSocial = (string)datos.Lector["RazonSocial"];
+                        lista.Add(compra);
+                        ultimoId = idCompra;
+                    }
+
+                    DetalleCompra linea = new DetalleCompra();
+                    linea.ProductoAsociado = new Producto();
+                    linea.ProductoAsociado.Id = (int)datos.Lector["IdProducto"];
+                    linea.ProductoAsociado.Nombre = (string)datos.Lector["Nombre"];
+                    linea.Cantidad = (int)datos.Lector["Cantidad"];
+                    linea.PrecioCompra = (decimal)datos.Lector["PrecioCompra"];
+                    compra.LineasCompra.Add(linea);
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+  
         public int contarComprasHoy()
         {
             ConexionDatos datos = new ConexionDatos();

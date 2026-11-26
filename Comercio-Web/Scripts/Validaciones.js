@@ -59,6 +59,11 @@ function filtrarDesplegable(input, idDesplegable) {
     // la primera vez guardo todas las opciones
     if (!opcionesOriginales[idDesplegable]) {
         opcionesOriginales[idDesplegable] = Array.from(ddl.options);
+
+        // al elegir una opción vuelve a ser un desplegable normal
+        ddl.addEventListener("change", function () {
+            ddl.size = 1;
+        });
     }
 
     var texto = input.value.toLowerCase();
