@@ -84,6 +84,9 @@ namespace Presentacion.Inventario
 
             if (seleccionado != null)
             {
+                // Recarga los desplegables solo con los activos
+                cargarDesplegables();
+
                 lblError.Visible = false;
                 Session.Add("productoSeleccionado", seleccionado);
 
@@ -96,21 +99,36 @@ namespace Presentacion.Inventario
                 txtPorcentajeGanancia.Text = seleccionado.PorcentajeGanancia.ToString();
                 txtPrecioActual.Text = seleccionado.PrecioCompraActual.ToString();
 
-                // Desplegables (Marca y Categoría)
-                ddlMarca.SelectedValue = seleccionado.MarcaAsociada.Id.ToString();
-                ddlCategoria.SelectedValue = seleccionado.CategoriaAsociada.Id.ToString();
+                // Agrega Marca inactiva al desplegable con el identificador "Inactiva"
+                string idMarcaStr = seleccionado.MarcaAsociada.Id.ToString();
+                if (ddlMarca.Items.FindByValue(idMarcaStr) == null)
+                {
+                    ddlMarca.Items.Add(new ListItem(seleccionado.MarcaAsociada.Descripcion + " (Inactiva)", idMarcaStr));
+                }
+                ddlMarca.SelectedValue = idMarcaStr;
 
-                // ListBox múltiple (Proveedores)
-                lbProveedores.ClearSelection(); // Limpia selecciones anteriores
+                // Agrega Categoría inactiva al desplegable con el identificador "Inactiva"
+                string idCategoriaStr = seleccionado.CategoriaAsociada.Id.ToString();
+                if (ddlCategoria.Items.FindByValue(idCategoriaStr) == null)
+                {
+                    ddlCategoria.Items.Add(new ListItem(seleccionado.CategoriaAsociada.Descripcion + " (Inactiva)", idCategoriaStr));
+                }
+                ddlCategoria.SelectedValue = idCategoriaStr;
+
+                // Agrega Proveedor inactivo al desplegable con el identificador "Inactivo"
+                lbProveedores.ClearSelection();
                 if (seleccionado.ProveedoresAsociados != null)
                 {
                     foreach (Proveedor prov in seleccionado.ProveedoresAsociados)
                     {
-                        ListItem item = lbProveedores.Items.FindByValue(prov.Id.ToString());
-                        if (item != null)
+                        string idProvStr = prov.Id.ToString();
+                        ListItem item = lbProveedores.Items.FindByValue(idProvStr);
+                        if (item == null)
                         {
-                            item.Selected = true;
+                            item = new ListItem(prov.RazonSocial + " (Inactivo)", idProvStr);
+                            lbProveedores.Items.Add(item);
                         }
+                        item.Selected = true;
                     }
                 }
 
@@ -255,10 +273,8 @@ namespace Presentacion.Inventario
             txtStockActual.Text = string.Empty;
             txtStockMinimo.Text = string.Empty;
 
-            ddlCategoria.SelectedIndex = 0;
-            ddlMarca.SelectedIndex = 0;
-
-            lbProveedores.ClearSelection(); // Limpia seleccionados
+            // Recarga desplegables para quitar ítems inactivos temporales
+            cargarDesplegables();
 
             rbActivoSI.Checked = true;
             rbActivoNO.Checked = false;
