@@ -27,7 +27,9 @@ namespace Presentacion.Mod_Compras
                 ddlProveedor.DataBind();
 
                 ProductoNegocio productoNegocio = new ProductoNegocio();
-                ddlProducto.DataSource = productoNegocio.listarConSP().FindAll(x => x.Activo);
+                List<Producto> productosActivos = productoNegocio.listarConSP().FindAll(x => x.Activo);
+                productosActivos.Sort((a, b) => a.Nombre.CompareTo(b.Nombre));
+                ddlProducto.DataSource = productosActivos;
                 ddlProducto.DataValueField = "Id";
                 ddlProducto.DataTextField = "Nombre";
                 ddlProducto.DataBind();

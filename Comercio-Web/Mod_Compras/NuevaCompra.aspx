@@ -72,9 +72,16 @@ function validarCompra() {
 
                         <h3 class="text-center mb-3 mb-md-4">Agregar Producto</h3>
 
+                       <div class="input-group mb-3">
+                            <span class="input-group-text fw-bold" style="width: 110px;">Buscar</span>
+                            <input type="text" class="form-control" placeholder="Escriba para filtrar productos" oninput="filtrarDesplegable(this, 'ddlProducto');" />
+                        </div>
+
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold" style="width: 110px;">Producto</span>
                             <asp:DropDownList ID="ddlProducto"  ClientIDMode="Static" runat="server" CssClass="form-select" AppendDataBoundItems="true">
+
+
                                 <asp:ListItem Text="Seleccione un producto" Value="" />
                             </asp:DropDownList>
                         </div>

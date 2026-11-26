@@ -58,6 +58,7 @@ namespace Presentacion.Mod_Ventas
                 }
             }
 
+            productosActivos.Sort((a, b) => a.Nombre.CompareTo(b.Nombre));
             ddlProducto.DataSource = productosActivos;
             ddlProducto.DataTextField = "Nombre";
             ddlProducto.DataValueField = "Id";

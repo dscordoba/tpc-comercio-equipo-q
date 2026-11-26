@@ -51,6 +51,33 @@ function soloAlfanumerico(input) {
     input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
 }
 
+// filtra un desplegable mientras se escribe en un textbox
+var opcionesOriginales = {};
+function filtrarDesplegable(input, idDesplegable) {
+    var ddl = document.getElementById(idDesplegable);
+
+    // la primera vez guardo todas las opciones
+    if (!opcionesOriginales[idDesplegable]) {
+        opcionesOriginales[idDesplegable] = Array.from(ddl.options);
+    }
+
+    var texto = input.value.toLowerCase();
+    ddl.innerHTML = "";
+
+    // dejo el "Seleccione..." y las que contienen lo escrito
+    opcionesOriginales[idDesplegable].forEach(function (op) {
+        if (op.value === "" || op.text.toLowerCase().includes(texto)) {
+            ddl.add(op);
+        }
+    });
+    // con texto, muestro la lista abierta (máx 6 opciones); sin texto, desplegable normal
+    if (texto === "") {
+        ddl.size = 1;
+    } else {
+        ddl.size = Math.min(ddl.options.length, 6);
+    }
+}
+
 // Bloquear letras, limitar enteros y permitir hasta 2 decimales
 function soloDecimales(input, maxEnteros = 10) {
     let valor = input.value.replace(/,/g, '.').replace(/[^0-9.]/g, '');
