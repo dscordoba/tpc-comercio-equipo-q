@@ -36,14 +36,24 @@ namespace Presentacion.Mod_Ventas
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!Seguridad.sesionActiva(Session["SessionActiva"]))
+            {
+                Response.Redirect("~/Login.aspx", false);
+                return;
+            }
+
+            if (!IsPostBack)
             {
                 cargarClientes();
                 cargarProductos();
                 cargarGrilla();
                 txtFecha.Text = DateTime.Today.ToString("yyyy-MM-dd");
+
+                VentaNegocio negocio = new VentaNegocio();
+                txtNumeroFactura.Text = negocio.obtenerProximoNumeroFactura();
             }
         }
+
         private void cargarProductos()
         {
             ProductoNegocio negocio = new ProductoNegocio();
@@ -251,10 +261,13 @@ namespace Presentacion.Mod_Ventas
 
                 Venta nuevaVenta = new Dominio.Venta();
                 nuevaVenta.NumeroFactura = numeroGenerado;
-                nuevaVenta.Fecha = fechaVenta;
+                nuevaVenta.Fecha = DateTime.Now; 
 
                 nuevaVenta.ClienteAsociado = new Dominio.Cliente();
                 nuevaVenta.ClienteAsociado.Id = int.Parse(ddlCliente.SelectedValue);
+
+                nuevaVenta.UsuarioAsociado = (Usuario)Session["SessionActiva"];
+
                 nuevaVenta.TotalFinal = totalVenta;
 
                 int idVentaGenerada = venta.agregar(nuevaVenta);

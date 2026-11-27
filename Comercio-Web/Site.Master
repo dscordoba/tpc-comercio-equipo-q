@@ -8,11 +8,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%: Page.Title %> - COMERCIO </title>
 
-        <asp:ContentPlaceHolder ID="head" runat="server">
-        </asp:ContentPlaceHolder>
-
         <link href="~/Content/bootstrap.min.css" rel="stylesheet" runat="server" />
         <link href="~/Content/Site.css" rel="stylesheet" runat="server" />
+
+        <script src='<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>'></script>
+        <script src='<%= ResolveUrl("~/Scripts/validaciones.js") %>'></script>
+
+        <script type="text/javascript">
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && event.target.tagName === "INPUT" && (event.target.type === "text" || event.target.type === "number")) {
+                    event.preventDefault();
+                }
+            });
+
+            function abrirModalGlobal(idModal) {
+                function mostrar() {
+                    var el = document.getElementById(idModal);
+                    if (el && typeof bootstrap !== 'undefined') {
+                        var modal = bootstrap.Modal.getOrCreateInstance(el);
+                        modal.show();
+                    }
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', mostrar);
+                } else {
+                    mostrar();
+                }
+            }
+        </script>
+
+        <asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>
     </head>
 
     <body class="bg-light">
@@ -170,16 +197,6 @@
                     </footer>
                 </div>
             </div>
-        </form>
-        <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
-        <script src='<%= ResolveUrl("~/Scripts/validaciones.js") %>'></script>
-        <script type="text/javascript">
-            document.addEventListener("keydown", function (event) {
-                // Bloquea el Enter solo si el usuario está escribiendo dentro de una caja de texto (TextBox)
-                if (event.key === "Enter" && event.target.tagName === "INPUT" && (event.target.type === "text" || event.target.type === "number" || event.target.type === "email")) {
-                    event.preventDefault();
-                }
-            });
-        </script>
+        </form>       
     </body>
 </html>

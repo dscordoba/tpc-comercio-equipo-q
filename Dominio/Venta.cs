@@ -13,6 +13,7 @@ namespace Dominio
         public DateTime Fecha {  get; set; }
         
         public Cliente ClienteAsociado {  get; set; }
+        public Usuario UsuarioAsociado { get; set; } 
         public List<DetalleVenta> LineasVenta { get; set; } 
         public decimal TotalFinal {  get; set; }
     }
