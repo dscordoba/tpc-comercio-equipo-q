@@ -15,7 +15,8 @@ namespace Presentacion.Ventas
         private void cargarTabla()
         {
             ClienteNegocio negocio = new ClienteNegocio();
-            dgvClientes.DataSource = negocio.listarConSP();
+            Session.Add("listaClientes", negocio.listarConSP());
+            dgvClientes.DataSource = Session["listaClientes"];
             dgvClientes.DataBind();
         }
 
@@ -180,5 +181,12 @@ namespace Presentacion.Ventas
             lblError.Visible = false;
         }
 
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Cliente> lista = (List<Cliente>)Session["listaClientes"];
+            List<Cliente> listaFiltrada = lista.FindAll(x => x.Apellido.ToUpper().Contains(txtFiltro.Text.ToUpper()));
+            dgvClientes.DataSource = listaFiltrada;
+            dgvClientes.DataBind();
+        }
     }
 }

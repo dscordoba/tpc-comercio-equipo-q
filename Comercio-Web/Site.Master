@@ -44,6 +44,8 @@
 
     <body class="bg-light">
         <form runat="server">
+            <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
             <div class="d-flex flex-column flex-md-row min-vh-100">
             
                 <!-- NAVBAR LATERAL (Sidebar) -->

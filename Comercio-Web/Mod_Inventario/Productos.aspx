@@ -42,26 +42,47 @@
 
                     <h3 class="text-center mb-3 mb-md-4">Listado de Productos</h3>
 
-                    <div class="table-responsive">
-                        <asp:GridView ID="dgvProductos" runat="server" AutoGenerateColumns="False" DataKeyNames="Id" OnSelectedIndexChanged="dgvProductos_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0">
-                            <HeaderStyle CssClass="table-info" />
-                            <Columns>
-                                <asp:TemplateField HeaderText="Id">
-                                    <ItemTemplate>
-                                        <asp:LinkButton ID="lnkId" runat="server" 
-                                            Text='<%# Eval("Id") %>' 
-                                            CommandName="Select" 
-                                            CssClass="fw-bold text-decoration-none" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:BoundField DataField="CodigoProducto" HeaderText="Código" />
-                                <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                                <asp:BoundField DataField="StockActual" HeaderText="Stock Actual" />
-                                <asp:BoundField DataField="PorcentajeGanancia" HeaderText="Porcentaje Ganancia" />
-                                <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
-                            </Columns>
-                        </asp:GridView>
-                    </div>
+                    <asp:UpdatePanel ID="updProductos" runat="server">
+                        <ContentTemplate>
+
+                            <div class="row">
+                                <div class="col-12 col-md-8 col-lg-12">
+                                    <asp:Panel ID="pnlFiltro" runat="server" DefaultButton="btnBuscar">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text fw-bold">Filtrar</span>
+                                            <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control" placeholder="Filtrar código o nombre..." AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged">
+                                            </asp:TextBox>
+                                            <asp:Button ID="btnBuscar" runat="server" OnClick="txtFiltro_TextChanged" Style="display:none;" />
+                                        </div>
+                                    </asp:Panel>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <asp:GridView ID="dgvProductos" runat="server" AutoGenerateColumns="False" DataKeyNames="Id" OnSelectedIndexChanged="dgvProductos_SelectedIndexChanged" 
+                                    CssClass="table table-striped table-hover border align-middle mb-0"  ShowHeaderWhenEmpty="true" EmptyDataText="No se encontraron productos.">
+                                    <HeaderStyle CssClass="table-info" />
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Id">
+                                            <ItemTemplate>
+                                                <asp:LinkButton ID="lnkId" runat="server" 
+                                                    Text='<%# Eval("Id") %>' 
+                                                    CommandName="Select" 
+                                                    CssClass="fw-bold text-decoration-none" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField DataField="CodigoProducto" HeaderText="Código" />
+                                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                        <asp:BoundField DataField="StockActual" HeaderText="Stock Actual" />
+                                        <asp:BoundField DataField="PorcentajeGanancia" HeaderText="Porcentaje Ganancia" />
+                                        <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
+                                    </Columns>
+                                </asp:GridView>
+                            </div>
+
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+
                 </div>
             </div>
         </div>

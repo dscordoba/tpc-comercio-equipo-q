@@ -15,8 +15,9 @@ namespace Presentacion.Inventario
         private void cargarTabla()
         {
             ProductoNegocio negocio = new ProductoNegocio();
-            dgvProductos.DataSource = negocio.listarConSP();
-            dgvProductos.DataBind();
+            Session.Add("listaProductos", negocio.listarConSP());
+            dgvProductos.DataSource = Session["listaProductos"];
+            dgvProductos.DataBind(); 
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -293,5 +294,12 @@ namespace Presentacion.Inventario
             lblError.Visible = false;
         }
 
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Dominio.Producto> lista = (List<Dominio.Producto>)Session["listaProductos"];
+            List<Dominio.Producto> listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()) || x.CodigoProducto.ToUpper().Contains(txtFiltro.Text.ToUpper()));
+            dgvProductos.DataSource = listaFiltrada;
+            dgvProductos.DataBind();
+        }
     }
 }
