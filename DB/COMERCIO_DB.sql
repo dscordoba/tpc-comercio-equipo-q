@@ -121,14 +121,16 @@ GO
 
 -- CREAR TABLA VENTAS
 CREATE TABLE dbo.VENTAS (
-    Id INT IDENTITY(1, 1)               NOT NULL,
-    NumeroFactura VARCHAR(50)           NOT NULL,
-    Fecha DATETIME                      NOT NULL DEFAULT GETDATE(),
-    IdCliente INT                       NOT NULL,
-    TotalFinal DECIMAL(18, 2)           NOT NULL,
+    Id                  INT IDENTITY(1, 1)      NOT NULL,
+    NumeroFactura       VARCHAR(50)             NOT NULL,
+    Fecha               DATETIME                NOT NULL        DEFAULT GETDATE(),
+    IdCliente           INT                     NOT NULL,
+    IdUsuario           INT                     NOT NULL,
+    TotalFinal          DECIMAL(18, 2)          NOT NULL,
 
-    CONSTRAINT PK_VENTAS                PRIMARY KEY (Id),
-    CONSTRAINT FK_VENTAS_CLIENTES       FOREIGN KEY(IdCliente) REFERENCES dbo.CLIENTES(Id)
+    CONSTRAINT PK_VENTAS            PRIMARY KEY (Id),
+    CONSTRAINT FK_VENTAS_CLIENTES   FOREIGN KEY (IdCliente)     REFERENCES dbo.CLIENTES(Id),
+    CONSTRAINT FK_VENTAS_USUARIOS   FOREIGN KEY (IdUsuario)     REFERENCES dbo.USUARIOS(Id)
 );
 GO
 
@@ -162,11 +164,14 @@ CREATE PROCEDURE dbo.sp_InsertarVenta
     @NumeroFactura      VARCHAR(50),
     @Fecha              DATETIME,
     @IdCliente          INT,
-    @TotalFinal         DECIMAL(18,2)
+    @IdUsuario          INT,
+    @TotalFinal         DECIMAL(18, 2)
 AS
 BEGIN
-    INSERT INTO dbo.VENTAS(NumeroFactura, Fecha, IdCliente, TotalFinal)
-    VALUES(@NumeroFactura, @Fecha, @IdCliente, @TotalFinal);
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.VENTAS (NumeroFactura, Fecha, IdCliente, IdUsuario, TotalFinal)
+    VALUES (@NumeroFactura, @Fecha, @IdCliente, @IdUsuario, @TotalFinal);
 
     SELECT CAST(SCOPE_IDENTITY() AS INT) AS IdVenta;
 END
