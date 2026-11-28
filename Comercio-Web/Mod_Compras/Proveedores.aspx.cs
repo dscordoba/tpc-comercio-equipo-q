@@ -56,7 +56,7 @@ namespace Presentacion.Compras
                 if(!seleccionado.Activo)
                 {
                     btnInactivar.Text = "Reactivar";
-                    btnInactivar.CssClass = "btn btn-succes";
+                    btnInactivar.CssClass = "btn btn-success";
                     divRbActivoSi.Visible = false;
                     divRbActivoNo.Visible = true;
                 }

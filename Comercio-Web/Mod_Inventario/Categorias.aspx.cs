@@ -39,7 +39,7 @@ namespace Presentacion.Inventario
             int idSeleccionado = Convert.ToInt32(dgvCategorias.SelectedDataKey.Value);
 
             CategoriaNegocio negocio = new CategoriaNegocio();
-            Dominio.Categoria seleccionado = negocio.listarConSP().Find(x => x.Id == idSeleccionado);
+            Dominio.Categoria seleccionado = negocio.listar().Find(x => x.Id == idSeleccionado);
 
             if (seleccionado != null)
             {
@@ -51,6 +51,8 @@ namespace Presentacion.Inventario
 
                 rbActivoSI.Checked = seleccionado.Activo;
                 rbActivoNO.Checked = !seleccionado.Activo;
+                rbActivoSI.Enabled = true;
+                rbActivoNO.Enabled = true;
 
                 btnInactivar.Visible = true;
                 btnInactivar.Enabled = true;
@@ -165,6 +167,14 @@ namespace Presentacion.Inventario
 
             lblError.Text = string.Empty;
             lblError.Visible = false;
+        }
+
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Dominio.Categoria> lista = (List<Dominio.Categoria>)Session["ListarCategorias"];
+            List<Dominio.Categoria> listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().Contains(txtFiltro.Text.ToUpper()));
+            dgvCategorias.DataSource = listaFiltrada;
+            dgvCategorias.DataBind();
         }
     }
 }

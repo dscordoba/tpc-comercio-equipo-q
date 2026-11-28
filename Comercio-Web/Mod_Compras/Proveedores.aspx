@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Proveedores.aspx.cs" Inherits="Presentacion.Compras.Proveedores" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script>
 function validarProveedores() { 
@@ -11,6 +12,7 @@ function validarProveedores() {
 }
     </script>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
 <!-- Contenedor General / Breadcrumb -->
@@ -39,12 +41,19 @@ function validarProveedores() {
                         <asp:GridView ID="dgvProveedores" runat="server" AutoGenerateColumns="false" DataKeyNames="Id" OnSelectedIndexChanged="dgvProveedores_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0">
                             <HeaderStyle CssClass="table-info" />
                             <Columns>
-                                <asp:BoundField DataField="Id" HeaderText="Id" />
+                                <asp:TemplateField HeaderText="Id" >
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="lnkId" runat="server"
+                                            Text='<%# Eval("Id") %>'
+                                            CommandName="Select"
+                                            CssClass="fw-bold text-decoration-none" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:BoundField DataField="RazonSocial" HeaderText="Razón Social" />
                                 <asp:BoundField DataField="Cuit" HeaderText="CUIT" />
                                 <asp:BoundField DataField="Email" HeaderText="Email" />
                                 <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
-                                <asp:BoundField DataField="Activo" HeaderText="Activo" />
+                                <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
                             </Columns>
                         </asp:GridView>
                     </div>
@@ -114,7 +123,7 @@ function validarProveedores() {
                     <!-- Botones de Acción -->
                         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
                             <asp:Button ID="btnGrabar" runat="server" Text="Grabar" CssClass="btn btn-primary" OnClientClick="return validarProveedores();" OnClick="btnGrabar_Click" />
-                            <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-danger px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
+                            <asp:Button ID="btnInactivar" runat="server" Text="Inactivar" CssClass="btn btn-outline-warning px-3" CausesValidation="false" OnClick="btnInactivar_Click" />
                             <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary px-3" CausesValidation="false" OnClick="btnCancelar_Click" />
                         </div>
 

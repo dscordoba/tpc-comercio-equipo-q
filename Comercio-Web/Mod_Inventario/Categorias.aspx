@@ -24,7 +24,9 @@ function validarCategoria() {
         </div>
 
         <!--PRINCIPAL -->
-        <div class="row">
+        <asp:UpdatePanel ID="updCategorias" runat="server">
+            <ContentTemplate>
+                <div class="row">
 
             <!-- COLUMNA IZQUIERDA: Listado -->
             <div class="col-12 col-lg-7 mb-3">
@@ -32,8 +34,20 @@ function validarCategoria() {
                     <div class="card-body p-3 p-md-4">
                         <h3 class="text-center mb-3 mb-md-4">Listado de Categorias</h3>
 
+                        <div class="row">
+                            <div class="col-12 col-md-8 col-lg-12">
+                                <asp:Panel ID="pnlFiltro" runat="server" DefaultButton="btnBuscar">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text fw-bold">Filtrar</span>
+                                        <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control" placeholder="Filtrar descripción..." AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
+                                        <asp:Button ID="btnBuscar" runat="server" OnClick="txtFiltro_TextChanged" Style="display:none;" />
+                                     </div>
+                                </asp:Panel>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
-                            <asp:GridView ID="dgvCategorias" runat="server" AutoGenerateColumns="false" DataKeyNames="Id" OnSelectedIndexChanged="dgvCategorias_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0">
+                            <asp:GridView ID="dgvCategorias" runat="server" AutoGenerateColumns="false" DataKeyNames="Id" OnSelectedIndexChanged="dgvCategorias_SelectedIndexChanged" CssClass="table table-striped table-hover border align-middle mb-0" ShowHeaderWhenEmpty="true" EmptyDataText="No se encontraron Categorias.">
                                 <HeaderStyle CssClass="table-info" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="Id" >
@@ -106,5 +120,8 @@ function validarCategoria() {
                 </div>
             </div>
 
-        </div>   
+        </div>       
+  </ContentTemplate>
+</asp:UpdatePanel>
+
 </asp:Content>

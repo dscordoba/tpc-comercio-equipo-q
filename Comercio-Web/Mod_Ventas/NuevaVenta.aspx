@@ -124,13 +124,18 @@ function validarLineaVenta() {
 
                             <div class="table-responsive">
                                 <asp:GridView ID="dgvLineasVenta" runat="server"
+                                    OnrowDeleting="dgvLineasVenta_BorrarLinea"
                                     AutoGenerateColumns="False"
                                     ShowHeaderWhenEmpty="True"
                                     EmptyDataText="Todavía no hay productos cargados"
                                     CssClass="table table-striped table-hover border align-middle mb-0">
                                     <HeaderStyle CssClass="table-info" />
                                     <Columns>
-                                        <asp:BoundField DataField="ProductoAsociado.Nombre" HeaderText="Producto" />
+                                        <asp:TemplateField HeaderText="Producto">
+                                            <ItemTemplate>
+                                                <%# Eval("ProductoAsociado.Nombre") %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                         <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
                                         <asp:BoundField DataField="PrecioUnitario" HeaderText="Precio" DataFormatString="{0:C}" />
                                         <asp:TemplateField HeaderText="Subtotal">
@@ -138,11 +143,7 @@ function validarLineaVenta() {
                                                 <%# (Convert.ToInt32(Eval("Cantidad")) * Convert.ToDecimal(Eval("PrecioUnitario"))).ToString("C") %>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Quitar">
-                                            <ItemTemplate>
-                                                <asp:CheckBox ID="chkIncluir" runat="server" Checked="true" AutoPostBack="true" OnCheckedChanged="chkIncluir_CheckedChanged" ToolTip="Desmarcar para quitar este producto de la venta" />
-                                            </ItemTemplate> 
-                                        </asp:TemplateField>
+                                        <asp:CommandField ShowDeleteButton="true" DeleteText="Quitar" />                                          
                                     </Columns>
                                 </asp:GridView>
                             </div>

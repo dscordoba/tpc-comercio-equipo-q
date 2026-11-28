@@ -13,7 +13,43 @@ namespace Presentacion.Mod_Ventas
 {
     public partial class NuevaVenta : System.Web.UI.Page
     {
-        private void cargarGrilla()
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Seguridad.sesionActiva(Session["SessionActiva"]))
+            {
+                Response.Redirect("~/Login.aspx", false);
+                return;
+            }
+
+            if (!IsPostBack)
+            {
+                cargarClientes();
+                cargarProductos();
+
+                txtFecha.Attributes["max"] = DateTime.Today.ToString("yyyy-MM-dd");
+                txtFecha.Text = DateTime.Today.ToString("yyyy-MM-dd");
+
+                VentaNegocio negocio = new VentaNegocio();
+                txtNumeroFactura.Text = negocio.obtenerProximoNumeroFactura();
+
+                Session.Remove("DetalleVenta");
+                cargarLineas();
+            }
+        }
+        private void cargarClientes()
+        {
+            ClienteNegocio cliente = new ClienteNegocio();
+            List<Cliente> clientesActivos = cliente.listarConSP().FindAll(x => x.Activo);
+
+            ddlCliente.DataSource = clientesActivos;
+            ddlCliente.DataTextField = "NombreCompleto";
+            ddlCliente.DataValueField = "Id";
+            ddlCliente.DataBind();
+            ddlCliente.Items.Insert(0, new ListItem("Seleccione un cliente", ""));
+
+        }
+
+        private void cargarGrilla()//revisar
         {
             List<DetalleVenta> detalle = Session["DetalleVenta"] as List<DetalleVenta>;
 
@@ -34,41 +70,12 @@ namespace Presentacion.Mod_Ventas
             txtTotalFinal.Text = total.ToString("0.00");
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Seguridad.sesionActiva(Session["SessionActiva"]))
-            {
-                Response.Redirect("~/Login.aspx", false);
-                return;
-            }
-
-            if (!IsPostBack)
-            {
-                cargarClientes();
-                cargarProductos();
-                cargarGrilla();
-                txtFecha.Text = DateTime.Today.ToString("yyyy-MM-dd");
-
-                VentaNegocio negocio = new VentaNegocio();
-                txtNumeroFactura.Text = negocio.obtenerProximoNumeroFactura();
-            }
-        }
-
         private void cargarProductos()
         {
             ProductoNegocio negocio = new ProductoNegocio();
-            List<Producto> todosLosProductos = negocio.listarConSP();
-            List<Producto> productosActivos = new List<Producto>();
-
-            foreach(Producto prod in todosLosProductos)
-            {
-                if(prod.Activo)
-                {
-                    productosActivos.Add(prod);
-                }
-            }
-
+            List<Producto> productosActivos = negocio.listarConSP().FindAll(x => x.Activo);
             productosActivos.Sort((a, b) => a.Nombre.CompareTo(b.Nombre));
+
             ddlProducto.DataSource = productosActivos;
             ddlProducto.DataTextField = "Nombre";
             ddlProducto.DataValueField = "Id";
@@ -78,27 +85,6 @@ namespace Presentacion.Mod_Ventas
                 
         }
 
-        private void cargarClientes()
-        {
-            ClienteNegocio cliente = new ClienteNegocio();
-            List<Cliente> todosLosClientes = cliente.listarConSP();
-            List<Cliente> clientesActivos = new List<Cliente>();
-
-            foreach (Cliente cli in todosLosClientes)
-            {
-                if (cli.Activo)
-                {
-                    clientesActivos.Add(cli);
-                }
-            }
-
-            ddlCliente.DataSource = clientesActivos;
-            ddlCliente.DataTextField = "NombreCompleto";
-            ddlCliente.DataValueField = "Id";
-            ddlCliente.DataBind();
-
-            ddlCliente.Items.Insert(0, new ListItem("Seleccione un cliente", ""));
-        }
         protected void ddlProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(string.IsNullOrEmpty(ddlProducto.SelectedValue))
@@ -110,32 +96,15 @@ namespace Presentacion.Mod_Ventas
             //Obtengo el Id seleccionado y traigo la lista desde ProductoNegocio
             int idSeleccionado = int.Parse(ddlProducto.SelectedValue);
             ProductoNegocio negocio = new ProductoNegocio();
-            List<Producto> lista = negocio.listarConSP();
+            Producto productoSleccionado = negocio.listarConSP().Find(x => x.Id == idSeleccionado);
 
             Producto productoSeleccionado = null;
 
-            //busco el producto y cuando es encontrado salgo de la lista
-            foreach(Producto prod in lista)
-            {
-                if(prod.Id == idSeleccionado)
-                {
-                    productoSeleccionado = prod;
-                    break;
-                }
-            }
-            //calculo de el precio de venta sumando el % de ganancia 
-            if(productoSeleccionado != null)
-            {
-                decimal montoGanancia = (productoSeleccionado.PrecioCompraActual * productoSeleccionado.PorcentajeGanancia) / 100;
-                decimal precioVenta = productoSeleccionado.PrecioCompraActual + montoGanancia;
-
-                txtPrecioVenta.Text = precioVenta.ToString("0.00");
-            }
+            if (productoSeleccionado != null)
+                txtPrecioVenta.Text = calcularPrecioVenta(productoSeleccionado).ToString();
             else
-            {
                 txtPrecioVenta.Text = string.Empty;
-            }
-        }
+         }
         protected void btnAgregarLinea_Click(object sender, EventArgs e)
         {
             try
@@ -149,36 +118,25 @@ namespace Presentacion.Mod_Ventas
                     return;
                 }
 
-                int cantidadNueva = int.Parse(txtCantidad.Text);
-                if (cantidadNueva <= 0)
+                int cantidadNueva;
+                if (!int.TryParse(txtCantidad.Text.Trim(), out cantidadNueva) || cantidadNueva <= 0)
                 {
                     lblError.Text = "Ingrese una cantidad mayor a cero";
                     lblError.Visible = true;
                     return;
                 }
 
-                //busco el producto
                 int idProducto = int.Parse(ddlProducto.SelectedValue);
                 ProductoNegocio negocio = new ProductoNegocio();
-                List<Producto> listaProductos = negocio.listarConSP();
+                Producto productoSeleccionado = negocio.listarConSP().Find(x => x.Id == idProducto);
 
-                Producto productoSeleccionado = null;
-                foreach (Producto prod in listaProductos)
-                {
-                    if (prod.Id == idProducto)
-                    {
-                        productoSeleccionado = prod;
-                        break;
-                    }
-                }
-
-                if (productoSeleccionado == null)
+                if(productoSeleccionado == null)
                 {
                     lblError.Text = "No se encontró el producto seleccionado";
                     lblError.Visible = true;
                     return;
                 }
-
+                
                 List<DetalleVenta> detalle = Session["DetalleVenta"] as List<DetalleVenta>;
                 if (detalle == null)
                 {
@@ -202,18 +160,15 @@ namespace Presentacion.Mod_Ventas
                     return;
                 }
 
-                //calculo del precio unitario
-                decimal montoGanancia = (productoSeleccionado.PrecioCompraActual * productoSeleccionado.PorcentajeGanancia) / 100;
-                decimal precioUnitario = productoSeleccionado.PrecioCompraActual + montoGanancia;
-
                 DetalleVenta nuevaLinea = new DetalleVenta();
                 nuevaLinea.ProductoAsociado = productoSeleccionado;
                 nuevaLinea.Cantidad = cantidadNueva;
-                nuevaLinea.PrecioUnitario = precioUnitario;
+                nuevaLinea.PrecioUnitario = calcularPrecioVenta(productoSeleccionado);
 
                 detalle.Add(nuevaLinea);
+                Session["DetalleVenta"] = detalle;
 
-                cargarGrilla();
+                cargarLineas();
                 txtCantidad.Text = string.Empty;
                 txtPrecioVenta.Text = string.Empty;
                 ddlProducto.SelectedIndex = 0;
@@ -223,6 +178,44 @@ namespace Presentacion.Mod_Ventas
                 lblError.Text = ex.Message;
                 lblError.Visible = true;                
             }
+        }
+
+        protected void dgvLineasVenta_BorrarLinea(object sender, GridViewDeleteEventArgs e)
+        {
+            List<DetalleVenta> detalle = Session["DetalleVenta"] as List<DetalleVenta>;
+
+            if(detalle != null && e.RowIndex >= 0 && e.RowIndex < detalle.Count)
+            {
+                detalle.RemoveAt(e.RowIndex);
+                Session["DetalleVenta"] = detalle;
+                cargarLineas();
+            }
+        }
+
+        protected void cargarLineas()
+        {
+            List<DetalleVenta> lineas = (List<DetalleVenta>)Session["DetalleVenta"];
+            if (lineas == null)
+            {
+                lineas = new List<DetalleVenta>();
+                Session["DetalleVenta"] = lineas;
+            }
+
+            dgvLineasVenta.DataSource = lineas;
+            dgvLineasVenta.DataBind();
+
+            decimal total = 0;
+            foreach (DetalleVenta item in lineas)
+            {
+               total += item.Cantidad * item.PrecioUnitario;
+            }
+                txtTotalFinal.Text = total.ToString("0.00");
+        }
+
+        private decimal calcularPrecioVenta(Producto prod)
+        {
+            decimal montoGanancia = (prod.PrecioCompraActual * prod.PorcentajeGanancia) / 100;
+            return prod.PrecioCompraActual + montoGanancia;
         }
         protected void btnConfirmar_Click(object sender, EventArgs e)
         {
@@ -237,8 +230,6 @@ namespace Presentacion.Mod_Ventas
                     return;
                 }
 
-                DateTime fechaVenta = DateTime.Today;
-
                 List<DetalleVenta> detalle = Session["DetalleVenta"] as List<DetalleVenta>;
                 if (detalle == null || detalle.Count == 0)
                 {
@@ -250,8 +241,7 @@ namespace Presentacion.Mod_Ventas
                 decimal totalVenta = 0;
                 foreach (DetalleVenta item in detalle)
                 {
-                    decimal subtotalLinea = item.Cantidad * item.PrecioUnitario;
-                    totalVenta += subtotalLinea;
+                   totalVenta += item.Cantidad * item.PrecioUnitario;
                 }
 
                 txtTotalFinal.Text = totalVenta.ToString("0.00");
@@ -263,15 +253,12 @@ namespace Presentacion.Mod_Ventas
                 nuevaVenta.NumeroFactura = numeroGenerado;
                 nuevaVenta.Fecha = DateTime.Now; 
 
-                nuevaVenta.ClienteAsociado = new Dominio.Cliente();
-                nuevaVenta.ClienteAsociado.Id = int.Parse(ddlCliente.SelectedValue);
-
+                nuevaVenta.ClienteAsociado = new Dominio.Cliente { Id = int.Parse(ddlCliente.SelectedValue)};
                 nuevaVenta.UsuarioAsociado = (Usuario)Session["SessionActiva"];
 
                 nuevaVenta.TotalFinal = totalVenta;
 
                 int idVentaGenerada = venta.agregar(nuevaVenta);
-
                 foreach (DetalleVenta item in detalle)
                 {
                     venta.agregarLinea(
@@ -284,11 +271,13 @@ namespace Presentacion.Mod_Ventas
                 nuevaVenta.LineasVenta = detalle;
                 Session["facturaVenta"] = nuevaVenta;
                 Session["facturaCliente"] = ddlCliente.SelectedItem.Text;
-                limpiarFormulario();
 
-                lblMensajeExito.Text = "¡Venta realizada con éxito! Nro. de factura: " + nuevaVenta.NumeroFactura;
-                pnlVentaExitosa.Visible = true;
+                limpiarFormulario();
                 Response.Redirect("~/Mod_Ventas/Factura.aspx", false);
+
+               // lblMensajeExito.Text = "¡Venta realizada con éxito! Nro. de factura: " + nuevaVenta.NumeroFactura;
+               // pnlVentaExitosa.Visible = true;
+               // Response.Redirect("~/Mod_Ventas/Factura.aspx", false);
 
             }
             catch ( Exception ex)
@@ -323,7 +312,7 @@ namespace Presentacion.Mod_Ventas
 
             //limpia los campos de cabecera
             txtFecha.Text = DateTime.Today.ToString("yyyy-MM-dd");
-            txtTotalFinal.Text = string.Empty;
+            txtTotalFinal.Text = "0.00";
             txtCantidad.Text = string.Empty;
             txtPrecioVenta.Text = string.Empty;
             lblError.Visible = false;
@@ -332,7 +321,7 @@ namespace Presentacion.Mod_Ventas
             txtNumeroFactura.Text = negocio.obtenerProximoNumeroFactura();
         }
 
-        protected void chkIncluir_CheckedChanged(object sender, EventArgs e)
+        protected void chkIncluir_CheckedChanged(object sender, EventArgs e)//
         {
             try
             {
